@@ -6,6 +6,7 @@ SPDX-License-Identifier: MPL-2.0
 
 <script lang="ts">
 	import VotingResults from './voting_results.svelte';
+	import NuageMots from './nuage_mots.svelte';
 	import { flip } from 'svelte/animate';
 	import { fly } from 'svelte/transition';
 	import { onMount } from 'svelte';
@@ -123,7 +124,12 @@ SPDX-License-Identifier: MPL-2.0
 			</table>
 		</div>
 	</div>
-	{#if [QuizQuestionType.ABCD, QuizQuestionType.VOTING, QuizQuestionType.TEXT].includes(question.type)}
+	{#if question.type === QuizQuestionType.TEXT}
+		<!-- HESTIM : réponses libres en nuage de mots (le graphique n'affichait que les réponses attendues) -->
+		<div class="mt-12">
+			<NuageMots data={new_data} {question} />
+		</div>
+	{:else if [QuizQuestionType.ABCD, QuizQuestionType.VOTING].includes(question.type)}
 		<div class="mt-12">
 			<VotingResults data={new_data} {question} />
 		</div>

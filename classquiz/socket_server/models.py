@@ -11,6 +11,8 @@ class JoinGameData(BaseModel):
     game_pin: str
     captcha: str | None = None
     custom_field: str | None = None
+    # HESTIM : jeton signé par la plateforme, renvoyé avec les scores (helpers/hestim.py)
+    hestim: str | None = None
 
 
 class RejoinGameData(BaseModel):

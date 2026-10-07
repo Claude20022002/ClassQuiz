@@ -32,10 +32,11 @@ SPDX-License-Identifier: MPL-2.0
 			document.documentElement.classList.remove('dark');
 		}
 	}
-	let start_language = 'en';
+	// HESTIM : le français par défaut (école francophone), un choix enregistré l'emporte
+	let start_language = 'fr';
 	const rtl_languages = ['he', 'prs', 'ps'];
 	if (browser) {
-		start_language = localStorage.getItem('language') ?? 'en';
+		start_language = localStorage.getItem('language') ?? 'fr';
 		document.documentElement.lang = start_language;
 		document.documentElement.dir = rtl_languages.includes(start_language) ? 'rtl' : 'ltr';
 	}

@@ -1,0 +1,3 @@
+# HESTIM : scripts exécutés dans les conteneurs Linux, jamais en CRLF (clones Windows)
+*.sh text eol=lf
+Dockerfile* text eol=lf

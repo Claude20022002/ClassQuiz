@@ -21,6 +21,7 @@ from classquiz.auth import get_current_user
 from classquiz.config import redis, settings, storage, meilisearch
 from classquiz.db.models import Quiz, User, PlayGame, GameInLobby, QuizQuestion, QuizQuestionType
 from classquiz.helpers.box_controller import generate_code
+from classquiz.helpers.hestim import signaler_partie_demarree
 from classquiz.kahoot_importer.import_quiz import import_quiz
 import urllib.parse
 
@@ -137,6 +138,15 @@ async def start_quiz(
         f"game_in_lobby:{user.id.hex}",
         GameInLobby(game_id=game.game_id, game_pin=str(game_pin), quiz_title=quiz.title).model_dump_json(),
         ex=900,
+    )
+    # HESTIM : la plateforme rattache la partie à la séance et prévient les étudiants
+    signaler_partie_demarree(
+        game_id=game.game_id,
+        game_pin=str(game_pin),
+        quiz_id=quiz_id,
+        quiz_title=quiz.title,
+        game_mode=game_mode,
+        user_email=user.email,
     )
     return {**quiz.model_dump(exclude={"id"}), **game.model_dump(exclude={"questions"}), "cqc_code": code}
 

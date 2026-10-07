@@ -16,7 +16,11 @@ ENV VITE_HCAPTCHA=ee81b2a1-acf3-4d20-b2a4-a7ea94c7eba5
 #ENV VITE_GOOGLE_AUTH_ENABLED=true
 #ENV VITE_GITHUB_AUTH_ENABLED=true
 ENV VITE_CAPTCHA_ENABLED=false
-#ENV VITE_REGISTRATION_DISABLED=True
+# HESTIM : options de build passées par docker compose (connexion par Planner, sans inscription locale)
+ARG VITE_CUSTOM_OAUTH_NAME
+ARG VITE_REGISTRATION_DISABLED
+ENV VITE_CUSTOM_OAUTH_NAME=$VITE_CUSTOM_OAUTH_NAME
+ENV VITE_REGISTRATION_DISABLED=$VITE_REGISTRATION_DISABLED
 #ENV VITE_PLAUSIBLE_DATA_URL=
 # change working directory
 WORKDIR /usr/src/app
@@ -43,15 +47,14 @@ ENV CI=true
 
 # change working directory
 WORKDIR /app
+# HESTIM : toutes les dépendances sont des devDependencies, qu'adapter-node intègre au build ;
+# node_modules n'est pas nécessaire à l'exécution (image de ~2,1 Go à ~250 Mo)
 COPY --from=builder /usr/src/app/package.json .
-COPY --from=builder /usr/src/app/pnpm-lock.yaml .
-RUN corepack enable && corepack prepare pnpm@11.6 --activate && pnpm ci --ignore-scripts
-# copy files from previous step
 COPY --from=builder /usr/src/app/build .
-COPY --from=builder /usr/src/app/node_modules ./node_modules
+USER node
 
 # our app is running on port 3000 within the container, so need to expose it
 EXPOSE 3000
 
 # the command that starts our app
-CMD ["pnpm", "run", "run:prod"]
+CMD ["node", "index.js"]

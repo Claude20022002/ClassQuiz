@@ -64,6 +64,9 @@ class Settings(BaseSettings):
     pixabay_api_key: str | None = None
     mods: list[str] = []
     registration_disabled: bool = False
+    # HESTIM : webhook « partie démarrée » vers la plateforme (classquiz/helpers/hestim.py)
+    hestim_webhook_url: str | None = None
+    hestim_webhook_secret: str | None = None
 
     # storage_backend
     storage_backend: str  # either "local" or "s3"

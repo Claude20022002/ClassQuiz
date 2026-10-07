@@ -34,6 +34,7 @@ from classquiz.routers import (
     quiztivity,
     pixabay,
     moderation,
+    hestim,
 )
 from classquiz.socket_server import sio
 from classquiz.helpers import meilisearch_init
@@ -131,4 +132,6 @@ app.include_router(
 )
 app.include_router(avatar.router, tags=["avatar"], prefix="/api/v1/avatar", include_in_schema=True)
 app.include_router(admin.router, tags=["admin"], prefix="/api/v1/admin", include_in_schema=True)
+# HESTIM : quiz lus par la plateforme pour les devoirs notés (requêtes signées)
+app.include_router(hestim.router, tags=["hestim"], prefix="/api/v1/hestim", include_in_schema=False)
 app.mount("/", ASGIApp(sio))

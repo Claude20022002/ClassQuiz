@@ -47,7 +47,7 @@ SPDX-License-Identifier: MPL-2.0
 	let answer_results: Array<Answer> = $state();
 	let gameData = $state();
 	let solution: QuestionType = $state();
-	let username = $state('');
+	let username = $state(data.player_name ?? '');
 	let scores = $state({});
 	let gameMeta: GameMeta = $state({
 		started: false
@@ -171,7 +171,7 @@ SPDX-License-Identifier: MPL-2.0
 >
 	<div>
 		{#if !gameMeta.started && gameData === undefined}
-			<JoinGame bind:game_pin bind:game_mode bind:username />
+			<JoinGame bind:game_pin bind:game_mode bind:username hestim={data.hestim} />
 		{:else if JSON.stringify(final_results) !== JSON.stringify([null])}
 			<ShowEndScreen bind:data={scores} show_final_results={true} {username} />
 		{:else if gameData !== undefined && question_index === ''}

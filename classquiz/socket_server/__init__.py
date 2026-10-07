@@ -30,6 +30,7 @@ from classquiz.socket_server.helpers import (
     check_captcha,
     has_already_answered,
 )
+from classquiz.helpers.hestim import enregistrer_joueur, signaler_partie_terminee
 from .models import (
     RejoinGameData,
     JoinGameData,
@@ -169,6 +170,9 @@ async def join_game(sid: str, data: dict):
     )
     await redis.set(f"game_session:{data.game_pin}:players:{data.username}", sid, ex=7200)
     await GamePlayer(username=data.username, sid=sid).to_player_stack(data.game_pin)
+
+    # HESTIM : identité du joueur sur la plateforme, pour lui rattacher son score
+    await enregistrer_joueur(data.game_pin, data.username, data.hestim)
 
     if data.custom_field == "":
         data.custom_field = None
@@ -346,6 +350,8 @@ async def get_final_results(sid: str, _data: dict):
     game_data = await PlayGame.get_from_redis(session["game_pin"])
     results = await generate_final_results(game_data, session["game_pin"])
     await sio.emit("final_results", results, room=session["game_pin"])
+    # HESTIM : scores envoyés à la plateforme (une seule fois par partie)
+    await signaler_partie_terminee(game_data, session["game_pin"])
 
 
 @sio.event
@@ -460,6 +466,7 @@ async def save_quiz(sid: str):
     if not session["admin"]:
         return
     await save_quiz_to_storage(session["game_pin"])
+    await signaler_partie_terminee(await PlayGame.get_from_redis(session["game_pin"]), session["game_pin"])
     await sio.emit("results_saved_successfully")
 
 
