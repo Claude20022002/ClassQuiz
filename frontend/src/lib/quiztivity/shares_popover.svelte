@@ -142,7 +142,7 @@ SPDX-License-Identifier: MPL-2.0
 			>
 			{#if add_shares_open}
 				<form
-					class="flex justify-center p-2 border-b-2 border-l-2 border-r-2 border-[#B07156] flex-col gap-2"
+					class="flex justify-center p-2 border-b-2 border-l-2 border-r-2 border-[#5b78dc] flex-col gap-2"
 					transition:fly={{ duration: 100, y: -10 }}
 					onsubmit={create_share}
 				>

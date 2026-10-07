@@ -33,7 +33,7 @@ SPDX-License-Identifier: MPL-2.0
 	};
 </script>
 
-<div class="rounded-sm border-2 border-[#B07156] flex flex-col w-fit gap-2 p-2">
+<div class="rounded-sm border-2 border-[#5b78dc] flex flex-col w-fit gap-2 p-2">
 	<div class:opacity-50={mod_rating !== null && mod_rating !== undefined} class="transition">
 		<BrownButton onclick={() => (mod_rating = null)}>Not Checked</BrownButton>
 	</div>

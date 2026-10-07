@@ -44,7 +44,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <div class="px-6 py-4">
-	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">ClassQuiz</h2>
+	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">HESTIM Quiz</h2>
 
 	<form onsubmit={continue_in_login}>
 		<div class="w-full mt-4">

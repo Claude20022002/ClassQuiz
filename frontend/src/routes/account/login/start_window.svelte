@@ -35,7 +35,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <div class="px-6 py-4">
-	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">ClassQuiz</h2>
+	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">HESTIM Quiz</h2>
 
 	<h3 class="mt-1 text-xl font-medium text-center text-gray-600 dark:text-gray-200">
 		{$t('login_page.welcome_back')}
@@ -99,14 +99,12 @@ SPDX-License-Identifier: MPL-2.0
 	</form>
 </div>
 
-<div class="flex items-center justify-center py-4 text-center bg-gray-50 dark:bg-gray-700">
-	<span class="text-sm text-gray-600 dark:text-gray-200"
-		>{$t('login_page.already_have_account')}
-	</span>
-
+<!-- HESTIM : pas d'inscription ici, les comptes viennent de Planner ; connexion par HESTIM Planner (OpenID Connect) -->
+<div class="flex flex-col items-center gap-2 px-6 py-5 text-center bg-gray-50 dark:bg-gray-800">
 	<a
-		href="/account/register"
-		class="mx-2 text-sm font-bold text-blue-500 dark:text-blue-400 hover:underline"
-		>{$t('words.register')}</a
+		href="/api/v1/users/oauth/custom/login"
+		class="font-display w-full rounded-[4px] bg-[#001861] px-6 py-3 font-bold uppercase tracking-[0.1em] text-white hover:bg-[#000e3d]"
+		>{$t('hestim.connexion.bouton')}</a
 	>
+	<span class="text-xs text-gray-500 dark:text-gray-400">{$t('hestim.connexion.aide')}</span>
 </div>

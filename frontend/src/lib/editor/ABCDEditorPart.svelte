@@ -17,7 +17,7 @@ SPDX-License-Identifier: MPL-2.0
 
 	const { t } = getLocalization();
 
-	const default_colors = ['#D6EDC9', '#B07156', '#7F7057', '#4E6E58'];
+	const default_colors = ['#3B63E0', '#0F8A7E', '#7048C9', '#B03A8C'] // HESTIM : couleurs de ligne de Planner;
 
 	interface Props {
 		selected_question: number;

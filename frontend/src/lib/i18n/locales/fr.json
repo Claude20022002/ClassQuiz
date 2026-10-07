@@ -1,4 +1,30 @@
 {
+    "hestim": {
+        "connexion": {
+            "bouton": "Se connecter avec mon compte HESTIM",
+            "aide": "Le même compte que HESTIM Planner. Pas de compte ? Demandez-le à la scolarité."
+        },
+        "erreur": {
+            "retour": "Retour à l'accueil"
+        },
+        "accueil": {
+            "description": "Les quiz du cours de HESTIM : en direct en classe, en équipes ou en devoir.",
+            "phrase": "Les quiz du cours, en direct pendant la séance ou en devoir. Avec votre compte HESTIM.",
+            "rejoindre": "Rejoindre une partie",
+            "connexion": "Se connecter avec HESTIM",
+            "direct": "Quiz en direct",
+            "direct_texte": "L'enseignant lance le quiz, la classe répond depuis le téléphone ; le classement s'affiche à chaque question.",
+            "equipes": "Défi par équipes",
+            "equipes_texte": "Un groupe de TP contre un autre : les points de chaque étudiant comptent pour son équipe.",
+            "nuage": "Nuage de mots",
+            "nuage_texte": "Une question ouverte, et les réponses de toute la classe apparaissent en direct."
+        },
+        "footer": {
+            "base": "le jeu de quiz de l'école, basé sur",
+            "sources": "Code source",
+            "attributions": "Crédits"
+        }
+    },
     "login_page": {
         "modal": {
             "success": {
@@ -19,7 +45,7 @@
             }
         },
         "welcome_back": "Bon retour parmi nous.",
-        "login_or_create_account": "Se connecter ou créer un compte",
+        "login_or_create_account": "Se connecter",
         "already_have_account": "Pas encore de compte ?",
         "email_or_username": "Email ou Nom d'utilisateur",
         "use_backup_code": "Utilisez un code de sauvegarde"
@@ -130,15 +156,15 @@
     "index_page": {
         "slogan": "La plateforme de quiz open-source !",
         "meta": {
-            "description": "ClassQuiz est une application d'apprentissage interactif destiné aux étudiants, elle est open-source et gratuite",
+            "description": "HESTIM Quiz est une application d'apprentissage interactif destiné aux étudiants, elle est open-source et gratuite",
             "title": "Accueil"
         },
         "features_description": {
-            "1": "ClassQuiz est un outil de quiz vous permettant de créer et gérer des quiz.",
+            "1": "HESTIM Quiz est un outil de quiz vous permettant de créer et gérer des quiz.",
             "2": "La fonctionnalité principale est la fonction d'import de quiz Kahoot!, vous permettant de créer des quiz directement depuis Kahoot!.",
             "3": "L'éditeur et la fonction d'export des résultats de quiz en format Excel sont des fonctionnalités remarquables de l'application."
         },
-        "stats": "Il y a déjà {{user_count}} utilisateurs et {{quiz_count}} quiz sur ClassQuiz.",
+        "stats": "Il y a déjà {{user_count}} utilisateurs et {{quiz_count}} quiz sur HESTIM Quiz.",
         "see_what_true_and_false": "Voir ce qui était vrai ou faux",
         "see_how_many_true_and_false": "Voir combien avaient vrai ou faux",
         "create_or_import": "Créer ou Importer",
@@ -162,24 +188,24 @@
         "check_if_chosen_wisely": "Vérifier si vous avez bien choisi.",
         "list_winners": "Liste des gagnants",
         "get_ranking_and_winners": "Avoir le classement et voir les gagnants",
-        "why_classquiz": "Pourquoi ClassQuiz ?",
-        "no_tracking_content": "Kahoot! vous suit et envoie ces informations à des tiers, mais pas ClassQuiz.",
-        "self_hostable_content": "ClassQuiz est facilement auto-hébergeable, vos données sont sous contrôle !",
-        "user_friendly_content": "ClassQuiz se veut simple d'utilisation, de manière à être utilisable par le plus grand nombre.",
-        "import_quiz_from_kahoot_and_edit": "Importer un quiz depuis Kahoot! et l'éditer sur ClassQuiz",
+        "why_classquiz": "Pourquoi HESTIM Quiz ?",
+        "no_tracking_content": "Kahoot! vous suit et envoie ces informations à des tiers, mais pas HESTIM Quiz.",
+        "self_hostable_content": "HESTIM Quiz est facilement auto-hébergeable, vos données sont sous contrôle !",
+        "user_friendly_content": "HESTIM Quiz se veut simple d'utilisation, de manière à être utilisable par le plus grand nombre.",
+        "import_quiz_from_kahoot_and_edit": "Importer un quiz depuis Kahoot! et l'éditer sur HESTIM Quiz",
         "quiz_results_downloadable_content": "Les résultats des quiz sont aisément exportables en format Excel (apparemment les autres outils ne le peuvent pas)",
-        "multilingual_content": "ClassQuiz est entièrement traduit en anglais, français, allemand, italien, norvégien bokmål, turc, et partiellement en indonésien et catalan.",
+        "multilingual_content": "HESTIM Quiz est entièrement traduit en anglais, français, allemand, italien, norvégien bokmål, turc, et partiellement en indonésien et catalan.",
         "dark_mode_content": "L'une des fonctionnalités les plus importantes qu'un site peut avoir !",
-        "german_server_content": "Les serveurs de ClassQuiz sont situés en Allemagne et hébergés par Netcup.",
+        "german_server_content": "Les serveurs de HESTIM Quiz sont situés en Allemagne et hébergés par Netcup.",
         "choose_answer_wisely": "Choisissez votre réponse judicieusement",
-        "completely_free_content": "ClassQuiz est gratuit pour l'utilisateur, sans plan payant ou de redirection pour une version payante. Tout don est donc apprécié.",
+        "completely_free_content": "HESTIM Quiz est gratuit pour l'utilisateur, sans plan payant ou de redirection pour une version payante. Tout don est donc apprécié.",
         "download_quizzes": "Télécharger des quiz",
         "community_driven": "Piloté par la communauté",
-        "download_quizzes_content": "Les quiz peuvent être téléchargés en un seul fichier et importés à tout moment, ce qui vous permet de déplacer facilement vos quiz vers une autre instance de ClassQuiz.",
-        "community_driven_content": "ClassQuiz dépend de sa communauté pour le financement, les idées de tests, les demandes de fonctionnalités, les traductions et plus encore ! Vous pouvez aussi faire partie de la communauté ClassQuiz !",
-        "how_does_classquiz_work": "Comment fonctionne ClassQuiz ?",
+        "download_quizzes_content": "Les quiz peuvent être téléchargés en un seul fichier et importés à tout moment, ce qui vous permet de déplacer facilement vos quiz vers une autre instance de HESTIM Quiz.",
+        "community_driven_content": "HESTIM Quiz dépend de sa communauté pour le financement, les idées de tests, les demandes de fonctionnalités, les traductions et plus encore ! Vous pouvez aussi faire partie de la communauté HESTIM Quiz !",
+        "how_does_classquiz_work": "Comment fonctionne HESTIM Quiz ?",
         "no_player_limit": "Nombre de joueurs illimité",
-        "no_player_limit_content": "ClassQuiz n'a pas de limite artificielle de nombre de joueurs. En théorie, plus de 1000 joueurs peuvent participer au même quiz, mais les tests n'ont été réalisés que jusqu'à 300 participants."
+        "no_player_limit_content": "HESTIM Quiz n'a pas de limite artificielle de nombre de joueurs. En théorie, plus de 1000 joueurs peuvent participer au même quiz, mais les tests n'ont été réalisés que jusqu'à 300 participants."
     },
     "overview_page": {
         "created_at": "Créé le",
@@ -240,10 +266,10 @@
         "visit_docs": "Voir la documentation",
         "a_kahoot_quiz": "Un quiz Kahoot!",
         "side_import_kahoot": "De ce côté, vous pouvez importer des quiz, qui se trouvent sur Kahoot!.",
-        "classquiz_quiz": "Un quiz ClassQuiz",
+        "classquiz_quiz": "Un quiz HESTIM",
         "upload_file_ending": "Téléverser le fichier se terminant par .cqa ou .xlsx",
         "url_should_look_like_this": "L'URL devrait ressembler à ceci : https://create.kahoot.it/details/...",
-        "this_side_classquiz": "De ce côté, vous pouvez importer des quiz, qui ont été exportés de ClassQuiz.",
+        "this_side_classquiz": "De ce côté, vous pouvez importer des quiz, qui ont été exportés de HESTIM Quiz.",
         "this_side_classquiz_excel": "Vous pouvez aussi téléverser des fichiers Excel, si vous avez rempli le modèle suivant. Si un quiz avec le titre existe déjà, cela rajoutera les questions au quiz existant.",
         "download_template_here": "Télécharger le modèle"
     },
@@ -488,8 +514,8 @@
     },
     "downloader": {
         "excel_format": "Format Excel",
-        "own_format": "Format ClassQuiz",
-        "help": "Le format ClassQuiz (.cqa) intégre aussi les images et les types de questions, alors que le format Excel ne supporte que les votes et les questions à choix multiples.",
+        "own_format": "Format HESTIM Quiz",
+        "help": "Le format HESTIM Quiz (.cqa) intégre aussi les images et les types de questions, alors que le format Excel ne supporte que les votes et les questions à choix multiples.",
         "select_download_type": "Sélectionner le type de téléchargement"
     }
 }

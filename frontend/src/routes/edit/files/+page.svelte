@@ -66,7 +66,7 @@ SPDX-License-Identifier: MPL-2.0
 	<div class="grid grid-cols-1 lg:grid-cols-2 p-4 gap-4">
 		{#each images as image}
 			<div
-				class="border-2 border-[#B07156] rounded-sm p-2 grid grid-cols-2 hover:opacity-100 transition-all"
+				class="border-2 border-[#5b78dc] rounded-sm p-2 grid grid-cols-2 hover:opacity-100 transition-all"
 				class:opacity-40={image.quiztivities.length === 0 && image.quizzes.length === 0}
 			>
 				<img

@@ -52,7 +52,7 @@ SPDX-License-Identifier: MPL-2.0
 	<div class="flex items-center w-full justify-center pt-4">
 		<a
 			href="/api/v1/users/oauth/custom/login"
-			class="inline-flex w-fit p-1 rounded-lg border-gray-500 border border-2 hover:bg-[#F78C40] transition hover:text-white group"
+			class="inline-flex w-fit p-1 rounded-lg border-gray-500 border border-2 hover:bg-[#001861] transition hover:text-white group"
 			>OpenID Login
 			<svg
 				class="h-6 w-6 ml-4 dark:fill-gray-300 group-hover:fill-white transition"

@@ -34,7 +34,7 @@ SPDX-License-Identifier: MPL-2.0
 		class:opacity-50={disabled}
 		class:cursor-not-allowed={disabled}
 		class:pointer-events-none={disabled}
-		class="text-black hover:bg-bg-[#B07156]/80 w-full px-4 py-2 leading-5 transition-all duration-200 transform bg-[#B07156] rounded-sm text-center outline-hidden hover:cursor-pointer"
+		class="text-white hover:bg-[#000e3d] w-full px-4 py-2 leading-5 transition-all duration-200 transform bg-[#001861] text-white rounded-sm text-center outline-hidden hover:cursor-pointer"
 		{onclick}
 		class:flex
 		class:justify-center={flex}
@@ -45,7 +45,7 @@ SPDX-License-Identifier: MPL-2.0
 	<button
 		{disabled}
 		{type}
-		class="text-black hover:cursor-pointer hover:opacity-80 w-full px-4 py-2 leading-5 transition-all duration-200 transform bg-[#B07156] rounded-sm text-center focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 outline-hidden"
+		class="text-white hover:cursor-pointer hover:opacity-80 w-full px-4 py-2 leading-5 transition-all duration-200 transform bg-[#001861] text-white rounded-sm text-center focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 outline-hidden"
 		{onclick}
 		class:flex
 		class:justify-center={flex}

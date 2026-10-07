@@ -140,7 +140,7 @@ SPDX-License-Identifier: MPL-2.0
 			return '100';
 		}
 	};
-	const default_colors = ['#D6EDC9', '#B07156', '#7F7057', '#4E6E58'];
+	const default_colors = ['#3B63E0', '#0F8A7E', '#7048C9', '#B03A8C'] // HESTIM : couleurs de ligne de Planner;
 </script>
 
 <div class="h-screen w-screen">
@@ -270,7 +270,7 @@ SPDX-License-Identifier: MPL-2.0
 					<div
 						class="w-full h-fit flex-row rounded-lg p-2 align-middle"
 						animate:flip={{ duration: 100 }}
-						style="background-color: {answer.color ?? '#b07156'}"
+						style="background-color: {answer.color ?? '#3B63E0'}"
 					>
 						<button
 							onclick={() => {

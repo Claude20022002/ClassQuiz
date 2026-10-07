@@ -185,7 +185,7 @@ SPDX-License-Identifier: MPL-2.0
 				<div class="flex justify-center">
 					<button
 						type="button"
-						class="w-1/3 text-3xl bg-[#B07156] my-2 disabled:opacity-60 rounded-lg p-1 transition"
+						class="w-1/3 text-3xl bg-[#001861] text-white my-2 disabled:opacity-60 rounded-lg p-1 transition"
 						disabled={selected_answer !== undefined}
 						onclick={() => {
 							selected_answer = slider_value[0];
@@ -240,7 +240,7 @@ SPDX-License-Identifier: MPL-2.0
 				<button
 					type="button"
 					disabled={!text_input}
-					class="w-1/3 text-3xl bg-[#B07156] my-2 disabled:opacity-60 rounded-lg p-1 transition"
+					class="w-1/3 text-3xl bg-[#001861] text-white my-2 disabled:opacity-60 rounded-lg p-1 transition"
 					onclick={() => {
 						selected_answer = text_input;
 						timer_res = '0';
@@ -254,7 +254,7 @@ SPDX-License-Identifier: MPL-2.0
 				<div
 					class="w-full h-fit flex-row rounded-lg p-2 align-middle"
 					animate:flip={{ duration: 100 }}
-					style="background-color: {answer.color ?? '#b07156'}"
+					style="background-color: {answer.color ?? '#3B63E0'}"
 				>
 					<button
 						onclick={() => {
@@ -311,7 +311,7 @@ SPDX-License-Identifier: MPL-2.0
 				</div>
 			{/each}
 			<button
-				class="bg-[#B07156] hover:bg-amber-700 text-white font-bold py-2 px-4 rounded-lg mt-2 transition w-full"
+				class="bg-[#001861] text-white hover:bg-[#000e3d] text-white font-bold py-2 px-4 rounded-lg mt-2 transition w-full"
 				type="button"
 				disabled={timer_res === '0'}
 				onclick={() => {

@@ -254,7 +254,7 @@ This should be okay, right?
 					<div
 						transition:fade={{ duration: 60 }}
 						class="p-2 transition rounded-sm"
-						class:bg-[#B07156]={selected === i}
+						class:bg-[#d3dbf1]={selected === i}
 						class:bg-gray-700={selected !== i}
 						onmouseenter={() => (selected = i)}
 						onmousedown={execute_action}

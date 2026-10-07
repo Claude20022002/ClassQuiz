@@ -1,0 +1,132 @@
+/*
+SPDX-FileCopyrightText: 2026 HESTIM
+
+SPDX-License-Identifier: MPL-2.0
+
+Thème HESTIM (phase Q8) : ClassQuiz prend l'apparence de HESTIM Planner sans modifier ses
+composants. Tailwind v4 lit ses couleurs dans des variables CSS : on remappe ici les palettes
+qu'emploie ClassQuiz vers les jetons de Planner (shared/design-tokens.json) :
+  - gris  → sol « bureau » clair (gris 50 à 600) et panneau des départs (gris 700 à 950 :
+            cases noir mat, filets, sol) ;
+  - vert de marque ClassQuiz (green-600), bleus et ciel → bleu marine HESTIM ;
+  - vert 400 à 500, rouge, orange et jaune : laissés à leur rôle de statut (bonne ou mauvaise
+    réponse, alerte), comme dans Planner.
+Polices : Barlow (texte) et Barlow Condensed (titres, en capitales comme le panneau). Angles
+droits du panneau (rayons de 2 à 6 px).
+*/
+
+@theme {
+	--font-sans: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+	--font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+	/* Gris : bureau clair puis panneau sombre */
+	--color-gray-50: #f3f4f7;
+	--color-gray-100: #eef0f5;
+	--color-gray-200: #dadde5;
+	--color-gray-300: #b9becb;
+	--color-gray-400: #8a91a2;
+	--color-gray-500: #5f6778;
+	--color-gray-600: #3f4759;
+	--color-gray-700: #2c2c30;
+	--color-gray-800: #212124;
+	--color-gray-900: #0b0b0d;
+	--color-gray-950: #000000;
+
+	/* Même échelle pour les autres gris de Tailwind employés çà et là */
+	--color-slate-50: #f3f4f7;
+	--color-slate-100: #eef0f5;
+	--color-slate-200: #dadde5;
+	--color-slate-300: #b9becb;
+	--color-slate-400: #8a91a2;
+	--color-slate-500: #5f6778;
+	--color-slate-600: #3f4759;
+	--color-slate-700: #2c2c30;
+	--color-slate-800: #212124;
+	--color-slate-900: #0b0b0d;
+	--color-zinc-700: #2c2c30;
+	--color-zinc-800: #212124;
+	--color-zinc-900: #0b0b0d;
+	--color-neutral-700: #2c2c30;
+	--color-neutral-800: #212124;
+	--color-neutral-900: #0b0b0d;
+
+	/* Bleu marine HESTIM (navy #001861) décliné du plus clair au plus profond */
+	--color-blue-50: #e8ecf7;
+	--color-blue-100: #d3dbf1;
+	--color-blue-200: #b2c0e6;
+	--color-blue-300: #8fa4e8;
+	--color-blue-400: #5b78dc;
+	--color-blue-500: #3b63e0;
+	--color-blue-600: #1e3fa8;
+	--color-blue-700: #001861;
+	--color-blue-800: #000e3d;
+	--color-blue-900: #000a2b;
+	--color-sky-50: #e8ecf7;
+	--color-sky-100: #d3dbf1;
+	--color-sky-200: #b2c0e6;
+	--color-sky-300: #8fa4e8;
+	--color-sky-400: #5b78dc;
+	--color-sky-500: #3b63e0;
+	--color-sky-600: #1e3fa8;
+	--color-sky-700: #001861;
+	--color-sky-800: #000e3d;
+	--color-indigo-500: #3b63e0;
+	--color-indigo-600: #1e3fa8;
+	--color-indigo-700: #001861;
+
+	/* Vert de marque de ClassQuiz (liens, survols, boutons) → bleu marine ; les verts de
+	   statut (bonne réponse) gardent le vert HESTIM */
+	--color-green-400: #3fcb74;
+	--color-green-500: #137d3f;
+	--color-green-600: #001861;
+	--color-green-700: #000e3d;
+	--color-lime-400: #3fcb74;
+	--color-emerald-500: #137d3f;
+
+	/* Statuts : rouge et orange de la charte */
+	--color-red-500: #db1f26;
+	--color-red-600: #b5161c;
+	--color-red-700: #9a1218;
+	--color-rose-600: #db1f26;
+	--color-orange-500: #f26322;
+
+	/* Angles du panneau */
+	--radius-sm: 3px;
+	--radius-md: 4px;
+	--radius-lg: 6px;
+	--radius-xl: 8px;
+	--radius-2xl: 10px;
+	--radius-3xl: 12px;
+}
+
+@layer base {
+	html {
+		font-family: var(--font-sans);
+	}
+
+	/* Titres en capitales condensées, comme les volets du panneau */
+	h1,
+	h2,
+	h3 {
+		font-family: var(--font-display);
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	:focus-visible {
+		outline: 2px solid #f26322;
+		outline-offset: 2px;
+	}
+}
+
+/* Fond général : bureau clair, panneau en mode sombre (remplace le vert de ClassQuiz) */
+html:not(.dark) body {
+	background-color: #f3f4f7;
+	color: #0d1326;
+}
+
+html.dark body {
+	background-color: #0b0b0d;
+	color: #f2f1ec;
+}

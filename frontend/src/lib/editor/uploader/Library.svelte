@@ -47,7 +47,7 @@ SPDX-License-Identifier: MPL-2.0
 			class="flex flex-col w-1/3 m-auto overflow-scroll h-full rounded-sm p-4 gap-4 bg-white dark:bg-gray-700"
 		>
 			{#each images as image}
-				<div class="rounded-sm border-2 border-[#B07156] p-2 flex-col flex gap-2">
+				<div class="rounded-sm border-2 border-[#5b78dc] p-2 flex-col flex gap-2">
 					<div>
 						<img
 							src="/api/v1/storage/download/{image.id}"

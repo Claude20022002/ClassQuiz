@@ -8,6 +8,8 @@ SPDX-License-Identifier: MPL-2.0
 @import 'tippy.js/dist/tippy.css';
 /* Write your global styles here, in PostCSS syntax */
 @import 'tailwindcss';
+/* HESTIM : palette, polices et angles de Planner (src/lib/hestim/theme.css) */
+@import './lib/hestim/theme.css';
 @plugin "@tailwindcss/typography";
 @tailwind utilities;
 
@@ -20,7 +22,7 @@ SPDX-License-Identifier: MPL-2.0
 }
 
 .link-hover:hover {
-	color: #4e6e58;
+	color: #001861;
 }
 @layer base {
 	button:not(:disabled),
@@ -29,8 +31,9 @@ SPDX-License-Identifier: MPL-2.0
 	}
 }
 
+/* HESTIM : cadre bleu marine du panneau, sol noir mat en mode sombre (au lieu du dégradé vert) */
 @utility normal-background {
-	@apply bg-gradient-to-r from-[#009444] via-[#39b54a] to-[#8dc63f] dark:bg-[#0f2702] dark:from-[#0f2702] dark:via-[#0f2702] dark:to-[#0f2702];
+	@apply bg-[#001861] text-[#f2f1ec] dark:bg-[#0b0b0d];
 }
 
 @utility admin-button {
@@ -40,6 +43,7 @@ SPDX-License-Identifier: MPL-2.0
 @utility action-button {
 	@apply px-4 py-2 leading-5 text-black dark:text-white transition-colors duration-200 transform bg-gray-50 dark:bg-gray-700 rounded-sm text-center hover:bg-gray-300 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-gray-600;
 }
+/* HESTIM : liens de la barre bleu marine, en capitales condensées */
 @utility btn-nav {
-	@apply text-lg font-medium px-3 text-gray-600 hover:text-green-600 py-1.5 transition-all duration-300;
+	@apply font-display text-lg font-semibold uppercase tracking-wider px-3 text-[#f2f1ec]/80 hover:text-white py-1.5 transition-all duration-300;
 }

@@ -26,13 +26,13 @@ SPDX-License-Identifier: MPL-2.0
 
 <div class="w-full h-[70vh] flex flex-row p-4 gap-4">
 	<textarea
-		class="w-full resize-none border-[#B07156] border-2 rounded-sm outline-hidden p-2 bg-white/30 dark:placeholder-gray-300"
+		class="w-full resize-none border-[#5b78dc] border-2 rounded-sm outline-hidden p-2 bg-white/30 dark:placeholder-gray-300"
 		bind:value={data.markdown}
 		placeholder="Enter your markdown here!"
 	></textarea>
 	<div class="w-full">
 		<div
-			class="aspect-video prose max-w-none border-[#B07156] border-2 rounded-sm p-2 dark:prose-invert"
+			class="aspect-video prose max-w-none border-[#5b78dc] border-2 rounded-sm p-2 dark:prose-invert"
 		>
 			{@html rendered_html}
 		</div>

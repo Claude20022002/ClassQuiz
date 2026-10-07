@@ -47,7 +47,7 @@ SPDX-License-Identifier: MPL-2.0
 	};
 </script>
 
-<div class="flex flex-col border-[#B07156] rounded-sm border-2 p-2 gap-2">
+<div class="flex flex-col border-[#5b78dc] rounded-sm border-2 p-2 gap-2">
 	<div class="grid grid-cols-2 gap-2 group mx-auto">
 		<Hoverable bind:hovering={FeedBackButtonsHovered.like}>
 			<button
@@ -100,7 +100,7 @@ SPDX-License-Identifier: MPL-2.0
 		<span class="text-center">{quiz.likes}</span>
 		<span class="text-center">{quiz.dislikes}</span>
 	</div>
-	<span class="w-full border-t-2 border-[#B07156]"></span>
+	<span class="w-full border-t-2 border-[#5b78dc]"></span>
 	<div class="mx-auto grid grid-cols-2 gap-2">
 		<div class="flex flex-col">
 			<!-- heroicons/legacy-outline/Play -->

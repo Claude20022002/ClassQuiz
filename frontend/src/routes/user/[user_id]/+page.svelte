@@ -67,7 +67,7 @@ SPDX-License-Identifier: MPL-2.0
 			{:else}
 				{#each data.quizzes as quiz}
 					<div
-						class="rounded-lg border-2 border-black hover:outline transition-all outline-[#B07156] -outline-offset-2 outline-8"
+						class="rounded-lg border-2 border-black hover:outline transition-all outline-[#5b78dc] -outline-offset-2 outline-8"
 					>
 						<div class="grid grid-cols-6 h-[25vh]">
 							<div class="col-start-2 col-end-6">

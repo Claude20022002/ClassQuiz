@@ -129,7 +129,7 @@ SPDX-License-Identifier: MPL-2.0
 			<div class="grid grid-cols-6 gap-6 w-11/12">
 				{#each data.pages as page, i (page.id)}
 					<div
-						class="border-[#B07156] border-2 rounded-sm aspect-square flex flex-col group"
+						class="border-[#5b78dc] border-2 rounded-sm aspect-square flex flex-col group"
 						animate:flip={{ duration: 200 }}
 					>
 						<p class="m-auto">{page.type}</p>

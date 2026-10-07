@@ -100,7 +100,7 @@ SPDX-License-Identifier: MPL-2.0
 >
 	<div
 		class="w-5/6 h-5/6 bg-black m-auto rounded-lg shadow-lg p-4 flex flex-col"
-		style="background-image: url({StartGameBackground}); background-color: #DFDBE5;"
+		style="background-image: url({StartGameBackground}); background-color: #f3f4f7;"
 	>
 		<div class="flex justify-center w-full">
 			<label
