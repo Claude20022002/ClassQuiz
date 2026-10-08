@@ -6,7 +6,8 @@
 
 - game.started : Planner rattache la partie à la séance en cours de l'enseignant et prévient
   ses étudiants.
-- game.finished : scores, bonnes réponses et réponses libres. Chaque étudiant arrivé depuis
+- game.finished : scores, bonnes réponses, réponses libres et journal des sorties (nombre et
+  durée des sorties de l'onglet ou de l'application pendant les questions). Chaque étudiant arrivé depuis
   la plateforme porte un jeton signé par Planner (?hid=), gardé avec son pseudo : Planner le
   vérifie et rattache le score à l'étudiant, donc au module (classement par groupe de TP).
 Le corps est signé : HMAC-SHA256 de « <horodatage>.<corps> » avec le secret partagé
@@ -99,6 +100,30 @@ async def enregistrer_joueur(game_pin: str, username: str, jeton: str | None) ->
     await redis.expire(cle, _DUREE_REDIS_S)
 
 
+# ── Journal des sorties (anti-triche) ──────────────────────────────────────
+# Le navigateur du joueur signale chaque sortie de l'onglet ou de l'application pendant une
+# question (plus d'une seconde) : nombre et durée cumulée par pseudo, envoyés avec les scores.
+
+_SORTIE_MIN_MS = 1000
+_SORTIE_MAX_MS = 3_600_000
+_SORTIES_MAX = 50
+
+
+async def enregistrer_sortie(game_pin: str, username: str, duree_ms: int) -> bool:
+    """Compte une sortie du joueur ; False si elle est ignorée (trop courte ou plafond atteint)."""
+    if duree_ms < _SORTIE_MIN_MS:
+        return False
+    cle_nombre = f"game:{game_pin}:hestim:sorties"
+    cle_duree = f"game:{game_pin}:hestim:sorties_duree"
+    if int(await redis.hget(cle_nombre, username) or 0) >= _SORTIES_MAX:
+        return False
+    await redis.hincrby(cle_nombre, username, 1)
+    await redis.hincrby(cle_duree, username, min(duree_ms, _SORTIE_MAX_MS))
+    await redis.expire(cle_nombre, _DUREE_REDIS_S)
+    await redis.expire(cle_duree, _DUREE_REDIS_S)
+    return True
+
+
 def _texte(valeur, longueur: int) -> str:
     return _BALISES.sub("", str(valeur or "")).strip()[:longueur]
 
@@ -115,6 +140,8 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
     hote = await User.objects.get_or_none(id=game.user_id)
     scores = await redis.hgetall(f"game_session:{game_pin}:player_scores")
     jetons = await redis.hgetall(f"game:{game_pin}:players:hestim")
+    sorties = await redis.hgetall(f"game:{game_pin}:hestim:sorties")
+    sorties_duree = await redis.hgetall(f"game:{game_pin}:hestim:sorties_duree")
     bonnes: dict[str, int] = {}
     questions = []
     for i, question in enumerate(game.questions):
@@ -132,7 +159,7 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
             resume["reponses_libres"] = [_texte(r.get("answer"), 100) for r in reponses[:_REPONSES_LIBRES_MAX]]
         questions.append(resume)
 
-    noms = list(scores.keys() | jetons.keys())[:_JOUEURS_MAX]
+    noms = list(scores.keys() | jetons.keys() | sorties.keys())[:_JOUEURS_MAX]
     evenement = {
         "event": "game.finished",
         "game_id": str(game.game_id),
@@ -141,7 +168,15 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
         "user_email": hote.email if hote else None,
         "nb_questions": len(game.questions),
         "joueurs": [
-            {"pseudo": nom[:60], "score": int(float(scores.get(nom) or 0)), "bonnes": bonnes.get(nom, 0), "hid": jetons.get(nom)}
+            {
+                "pseudo": nom[:60],
+                "score": int(float(scores.get(nom) or 0)),
+                "bonnes": bonnes.get(nom, 0),
+                "hid": jetons.get(nom),
+                # Journal des sorties : visible de l'enseignant seulement, côté Planner
+                "sorties": int(sorties.get(nom) or 0),
+                "sorties_duree_ms": int(sorties_duree.get(nom) or 0),
+            }
             for nom in noms
         ],
         "questions": questions,

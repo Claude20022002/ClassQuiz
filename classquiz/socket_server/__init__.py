@@ -30,7 +30,7 @@ from classquiz.socket_server.helpers import (
     check_captcha,
     has_already_answered,
 )
-from classquiz.helpers.hestim import enregistrer_joueur, signaler_partie_terminee
+from classquiz.helpers.hestim import enregistrer_joueur, enregistrer_sortie, signaler_partie_terminee
 from .models import (
     RejoinGameData,
     JoinGameData,
@@ -38,6 +38,7 @@ from .models import (
     SubmitAnswerData,
     RegisterAsAdminData,
     KickPlayerInput,
+    SortieData,
     ConnectSessionIdEvent,
 )
 
@@ -340,6 +341,25 @@ async def submit_answer(sid: str, data: dict):
         game_data.question_show = False
         await game_data.save(session["game_pin"])
         await sio.emit("everyone_answered", {})
+
+
+@sio.event
+async def hestim_sortie(sid: str, data: dict):
+    """HESTIM : journal des sorties, le joueur a quitté l'onglet ou l'application pendant une question."""
+    try:
+        data = SortieData(**data)
+    except ValidationError:
+        return
+    session = await get_session(sid, sio)
+    if session.get("admin") or not session.get("username") or not session.get("game_pin"):
+        return
+    try:
+        game_data = await PlayGame.get_from_redis(session["game_pin"])
+    except ValidationError:
+        return
+    if not 0 <= data.question_index < len(game_data.questions):
+        return
+    await enregistrer_sortie(session["game_pin"], session["username"], data.duree_ms)
 
 
 @sio.event

@@ -62,6 +62,13 @@ class SubmitAnswerData(BaseModel):
     complex_answer: list[SubmitAnswerDataOrderType] | None = None
 
 
+class SortieData(BaseModel):
+    """HESTIM : le joueur a quitté l'onglet ou l'application pendant une question (journal des sorties)."""
+
+    question_index: int
+    duree_ms: int
+
+
 class KickPlayerInput(BaseModel):
     username: str
 

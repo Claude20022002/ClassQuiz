@@ -16,6 +16,7 @@ SPDX-License-Identifier: MPL-2.0
 	import BrownButton from '$lib/components/buttons/brown.svelte';
 	import { get_foreground_color } from '../helpers';
 	import MediaComponent from '$lib/editor/MediaComponent.svelte';
+	import { ordreAffichage, suivreSorties } from './hestim_anti_triche';
 
 	const { t } = getLocalization();
 
@@ -61,6 +62,21 @@ SPDX-License-Identifier: MPL-2.0
 	});
 
 	timer(question.time);
+
+	// HESTIM : réponses d'un QCM dans un ordre propre à ce téléphone (mode « normal » seulement)
+	let ordre_abcd = $derived(
+		question.type === QuizQuestionType.ABCD
+			? ordreAffichage(question.answers?.length ?? 0, game_mode)
+			: Array.from({ length: question.answers?.length ?? 0 }, (_, i) => i)
+	);
+
+	// HESTIM : journal des sorties, tant que la question attend une réponse
+	$effect(() =>
+		suivreSorties(
+			() => selected_answer === undefined && timer_res !== '0',
+			(duree_ms) => socket.emit('hestim_sortie', { question_index: Number(question_index), duree_ms })
+		)
+	);
 
 	$effect(() => {
 		if (solution !== undefined) {
@@ -175,7 +191,8 @@ SPDX-License-Identifier: MPL-2.0
 				</div>
 
 				<div class="grid grid-rows-2 grid-flow-col auto-cols-auto gap-2 w-full p-4 h-full">
-					{#each question.answers as answer, i}
+					{#each ordre_abcd as origine, i}
+						{@const answer = question.answers[origine]}
 						<button
 							class="rounded-lg h-full flex align-middle justify-center disabled:opacity-60 p-3 border-2 border-black"
 							style="background-color: {answer.color ??
@@ -189,7 +206,7 @@ SPDX-License-Identifier: MPL-2.0
 								<img
 									class="h-2/3 inline-block m-auto"
 									alt="Icon"
-									src={kahoot_icons[i]}
+									src={kahoot_icons[origine]}
 								/>
 							{:else}
 								<p class="m-auto">{answer.answer}</p>
