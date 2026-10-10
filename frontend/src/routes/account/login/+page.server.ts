@@ -13,6 +13,11 @@ export async function load({ parent, url }) {
 	if (email) {
 		redirect(302, returnTo);
 	}
+	// HESTIM : l'enseignant qui arrive de Planner (?sso=1) y est déjà connecté ; il est envoyé
+	// droit à la connexion par son compte HESTIM, sans passer par cette page.
+	if (url.searchParams.get('sso') === '1') {
+		redirect(302, '/api/v1/users/oauth/custom/login');
+	}
 	return {
 		verified: verified !== null
 	};

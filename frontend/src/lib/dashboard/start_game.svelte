@@ -151,9 +151,10 @@ SPDX-License-Identifier: MPL-2.0
 					selected_game_mode = 'kahoot';
 				}}
 			>
-				<h2 class="text-center text-2xl">{$t('words.normal')}</h2>
+				<!-- HESTIM : mode « projecteur » (anti-triche), proposé par défaut -->
+				<h2 class="text-center text-2xl">{$t('hestim.mode.projecteur')}</h2>
 				<p>
-					{$t('start_game.normal_mode_description')}
+					{$t('hestim.mode.projecteur_aide')}
 				</p>
 			</div>
 			<div
@@ -163,9 +164,9 @@ SPDX-License-Identifier: MPL-2.0
 					selected_game_mode = 'normal';
 				}}
 			>
-				<h2 class="text-center text-2xl">{$t('start_game.old_school_mode')}</h2>
+				<h2 class="text-center text-2xl">{$t('hestim.mode.telephone')}</h2>
 				<p>
-					{$t('start_game.old_school_mode_description')}
+					{$t('hestim.mode.telephone_aide')}
 				</p>
 			</div>
 		</div>

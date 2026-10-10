@@ -124,6 +124,16 @@ async def enregistrer_sortie(game_pin: str, username: str, duree_ms: int) -> boo
     return True
 
 
+async def enregistrer_capture(game_pin: str, username: str) -> bool:
+    """Compte une capture d'écran faite pendant une question (signalée par l'application iPhone)."""
+    cle = f"game:{game_pin}:hestim:captures"
+    if int(await redis.hget(cle, username) or 0) >= _SORTIES_MAX:
+        return False
+    await redis.hincrby(cle, username, 1)
+    await redis.expire(cle, _DUREE_REDIS_S)
+    return True
+
+
 def _texte(valeur, longueur: int) -> str:
     return _BALISES.sub("", str(valeur or "")).strip()[:longueur]
 
@@ -142,6 +152,7 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
     jetons = await redis.hgetall(f"game:{game_pin}:players:hestim")
     sorties = await redis.hgetall(f"game:{game_pin}:hestim:sorties")
     sorties_duree = await redis.hgetall(f"game:{game_pin}:hestim:sorties_duree")
+    captures = await redis.hgetall(f"game:{game_pin}:hestim:captures")
     bonnes: dict[str, int] = {}
     questions = []
     for i, question in enumerate(game.questions):
@@ -159,7 +170,7 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
             resume["reponses_libres"] = [_texte(r.get("answer"), 100) for r in reponses[:_REPONSES_LIBRES_MAX]]
         questions.append(resume)
 
-    noms = list(scores.keys() | jetons.keys() | sorties.keys())[:_JOUEURS_MAX]
+    noms = list(scores.keys() | jetons.keys() | sorties.keys() | captures.keys())[:_JOUEURS_MAX]
     evenement = {
         "event": "game.finished",
         "game_id": str(game.game_id),
@@ -176,6 +187,7 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
                 # Journal des sorties : visible de l'enseignant seulement, côté Planner
                 "sorties": int(sorties.get(nom) or 0),
                 "sorties_duree_ms": int(sorties_duree.get(nom) or 0),
+                "captures": int(captures.get(nom) or 0),
             }
             for nom in noms
         ],

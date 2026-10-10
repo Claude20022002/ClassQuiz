@@ -1,5 +1,11 @@
 {
     "hestim": {
+        "mode": {
+            "projecteur": "Projector (recommended)",
+            "projecteur_aide": "The question and answers only appear on the projector; phones show colored shapes. Students must be in the room to answer.",
+            "telephone": "On each phone",
+            "telephone_aide": "Each phone shows the question and answers, in a different order for everyone. Handy remotely, but students can answer from outside the room."
+        },
         "connexion": {
             "bouton": "Sign in with my HESTIM account",
             "aide": "The same account as HESTIM Planner. No account? Ask the registrar’s office."

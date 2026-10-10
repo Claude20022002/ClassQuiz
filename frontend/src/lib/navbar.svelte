@@ -39,6 +39,13 @@ SPDX-License-Identifier: MPL-2.0
 				window.matchMedia('(prefers-color-scheme: dark)').matches);
 	}
 
+	// HESTIM : retour à Planner en un clic. Adresse fixée à la construction (VITE_HESTIM_PLANNER_URL)
+	// ou déduite du domaine (quiz.exemple.fr → planner.exemple.fr) ; /tableau mène au tableau du rôle.
+	let plannerUrl: string | null = $state(import.meta.env.VITE_HESTIM_PLANNER_URL ?? null);
+	if (browser && !plannerUrl && window.location.hostname.startsWith('quiz.')) {
+		plannerUrl = `${window.location.protocol}//planner.${window.location.hostname.slice(5)}/tableau`;
+	}
+
 	const switchDarkMode = () => {
 		!darkMode ? localStorage.setItem('theme', 'dark') : localStorage.setItem('theme', 'light');
 		window.location.reload();
@@ -50,6 +57,9 @@ SPDX-License-Identifier: MPL-2.0
 	<div class="hidden lg:flex lg:items-center lg:flex-row lg:justify-between">
 		<div class="lg:flex lg:items-center lg:flex-row gap-1">
 			<Marque />
+			{#if plannerUrl}
+				<a class="btn-nav" href={plannerUrl}>← Planner</a>
+			{/if}
 			<a class="btn-nav border-2 rounded-sm" href="/play">{$t('words.play')}</a>
 			<a class="btn-nav" href="/explore">{$t('words.explore')}</a>
 			<a class="btn-nav" href="/search">{$t('words.search')}</a>
@@ -246,6 +256,9 @@ SPDX-License-Identifier: MPL-2.0
 		<!-- Navbar content -->
 		{#if !menuIsClosed}
 			<div class="flex flex-col" transition:slide|global={{ duration: 400 }}>
+				{#if plannerUrl}
+					<a class="btn-nav" href={plannerUrl}>← Planner</a>
+				{/if}
 				<a class="btn-nav" href="/explore">{$t('words.explore')}</a>
 				<a class="btn-nav" href="/search">{$t('words.search')}</a>
 				{#if $signedIn}

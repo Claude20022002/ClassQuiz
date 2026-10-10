@@ -30,7 +30,7 @@ from classquiz.socket_server.helpers import (
     check_captcha,
     has_already_answered,
 )
-from classquiz.helpers.hestim import enregistrer_joueur, enregistrer_sortie, signaler_partie_terminee
+from classquiz.helpers.hestim import enregistrer_capture, enregistrer_joueur, enregistrer_sortie, signaler_partie_terminee
 from .models import (
     RejoinGameData,
     JoinGameData,
@@ -360,6 +360,15 @@ async def hestim_sortie(sid: str, data: dict):
     if not 0 <= data.question_index < len(game_data.questions):
         return
     await enregistrer_sortie(session["game_pin"], session["username"], data.duree_ms)
+
+
+@sio.event
+async def hestim_capture(sid: str, data: dict):
+    """HESTIM : capture d'écran faite pendant une question (l'iPhone ne permet pas de l'empêcher)."""
+    session = await get_session(sid, sio)
+    if session.get("admin") or not session.get("username") or not session.get("game_pin"):
+        return
+    await enregistrer_capture(session["game_pin"], session["username"])
 
 
 @sio.event

@@ -1,5 +1,11 @@
 {
     "hestim": {
+        "mode": {
+            "projecteur": "Projecteur (recommandé)",
+            "projecteur_aide": "La question et les réponses s'affichent seulement au projecteur ; les téléphones montrent des formes de couleur. Il faut être dans la salle pour répondre.",
+            "telephone": "Sur chaque téléphone",
+            "telephone_aide": "Chaque téléphone affiche la question et les réponses, dans un ordre différent pour chacun. Pratique à distance, mais on peut répondre hors de la salle."
+        },
         "connexion": {
             "bouton": "Se connecter avec mon compte HESTIM",
             "aide": "Le même compte que HESTIM Planner. Pas de compte ? Demandez-le à la scolarité."
