@@ -78,7 +78,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>ClassQuiz - Register</title>
+	<title>PlannerQuiz - Register</title>
 </svelte:head>
 <div class="flex items-center justify-center min-h-screen px-4">
 	<div>

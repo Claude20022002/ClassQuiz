@@ -27,7 +27,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>HESTIM Quiz</title>
+	<title>PlannerQuiz</title>
 	<meta name="description" content={$t('hestim.accueil.description')} />
 </svelte:head>
 
@@ -36,7 +36,7 @@ SPDX-License-Identifier: MPL-2.0
 		<div class="rounded-[6px] bg-[#001861] p-2 shadow-lg">
 			<div class="rounded-[4px] bg-[#0b0b0d] px-6 py-12 text-center text-[#f2f1ec] lg:px-16 lg:py-16">
 				<img src="/hestim-embleme.png" alt="" width="88" height="88" class="mx-auto rounded-[10px] bg-white p-2" />
-				<h1 class="mt-8 text-5xl lg:text-7xl">HESTIM Quiz</h1>
+				<h1 class="mt-8 text-5xl lg:text-7xl">PlannerQuiz</h1>
 				<p class="mx-auto mt-4 max-w-2xl text-lg lg:text-xl text-[#a6a6ac]">{$t('hestim.accueil.phrase')}</p>
 				<div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
 					<a

@@ -37,7 +37,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>ClassQuiz - {data.user.username ? `@${data.user.username}` : 'User not found'}</title>
+	<title>PlannerQuiz - {data.user.username ? `@${data.user.username}` : 'User not found'}</title>
 </svelte:head>
 
 <div class="h-full">
