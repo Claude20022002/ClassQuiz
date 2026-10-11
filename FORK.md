@@ -57,6 +57,14 @@ Dans le code Python, chaque modification porte un commentaire qui commence par �
 2. **Chaque fichier nouveau commence par l'en-tête SPDX** de l'école (`SPDX-FileCopyrightText: 2026 HESTIM`, `SPDX-License-Identifier: MPL-2.0`).
 3. **Tenir ce fichier à jour** quand un fichier de l'origine est modifié pour la première fois.
 
+## Travailler à deux groupes
+
+Décision du chef de projet, 11 octobre 2026 : les mêmes règles que pour Planner.
+
+- **Une branche par lot**, partie de `hestim` et préfixée par le groupe : `a/<lot>` (groupe A, le code Python de `classquiz/`), `b/<lot>` (groupe B, le site Svelte de `frontend/`). Une PR par branche vers `hestim` ; le chef de projet fusionne.
+- **Un dossier de travail par groupe** : le groupe A garde `../ClassQuiz`, le groupe B travaille dans une copie (`git worktree add ../ClassQuiz-b -b b/<lot> origin/hestim`). Aucun groupe n'écrit dans le dossier de l'autre.
+- **Pas de CI** dans ce dépôt : les tests Python se lancent sur le poste, dans l'image de l'API (commande dans le compte rendu de Planner, repères pratiques).
+
 ## Ce que la licence impose et permet
 
 Le code de ClassQuiz est sous **Mozilla Public License 2.0** (`LICENSE`), avec quelques fichiers sous MIT (`LICENSES/`).
