@@ -30,7 +30,13 @@ from classquiz.socket_server.helpers import (
     check_captcha,
     has_already_answered,
 )
-from classquiz.helpers.hestim import enregistrer_capture, enregistrer_joueur, enregistrer_sortie, signaler_partie_terminee
+from classquiz.helpers.hestim import (
+    enregistrer_capture,
+    enregistrer_joueur,
+    enregistrer_sortie,
+    identifiant_de_partie_valide,
+    signaler_partie_terminee,
+)
 from .models import (
     RejoinGameData,
     JoinGameData,
@@ -218,6 +224,11 @@ async def register_as_admin(sid: str, data: dict):
         return
     game_pin = data.game_pin
     game_id = data.game_id
+    # HESTIM : le code de la partie est connu de tous les joueurs ; seul son identifiant, remis à
+    # l'enseignant qui l'a lancée, donne la main. Sans ce contrôle, le premier venu la prenait.
+    if not identifiant_de_partie_valide(await redis.get(f"game:{game_pin}"), game_id):
+        await sio.emit("error", room=sid)
+        return
     if await redis.get(f"game_session:{game_pin}") is not None:
         await sio.emit("already_registered_as_admin", room=sid)
         return
@@ -454,6 +465,11 @@ async def register_as_remote(sid: str, data: dict):
         await sio.emit("error", room=sid)
         print(e)
         return
+    # HESTIM : même contrôle que register_as_admin (la télécommande pilote la partie et reçoit
+    # les questions avec leurs réponses)
+    if not identifiant_de_partie_valide(await redis.get(f"game:{data.game_pin}"), data.game_id):
+        await sio.emit("error", room=sid)
+        return
     await sio.emit(
         "registered_as_admin",
         {"game_id": data.game_id, "game": await redis.get(f"game:{data.game_pin}")},
@@ -482,6 +498,9 @@ async def set_control_visibility(sid: str, data: dict):
         print(e)
         return
     session: dict = await get_session(sid, sio)
+    # HESTIM : réservé à qui anime la partie ; sinon un joueur masquait les commandes de l'enseignant
+    if not session.get("admin"):
+        return
     await sio.emit(
         "control_visibility",
         {"visible": data.visible},

@@ -174,8 +174,9 @@ async def get_game_id(game_pin: str):
     redis_res = await redis.get(f"game:{game_pin}")
     if redis_res is None:
         raise HTTPException(status_code=404, detail="game not found")
-    else:
-        return json.loads(redis_res)["game_id"]
+    # HESTIM : cette route, ouverte à tous, rendait l'identifiant de la partie à qui donnait son
+    # code. Or l'identifiant donne la main sur la partie : elle dit seulement que la partie existe.
+    return {"exists": True}
 
 
 @router.get("/list")

@@ -262,9 +262,11 @@ class PlayGame(BaseModel):
         await redis.set(f"game:{game_pin}", self.model_dump_json(), ex=ex)
 
     def to_player_data(self) -> dict:
+        # HESTIM : `game_id` donne la main sur la partie (register_as_admin, register_as_remote) ;
+        # il ne part donc jamais chez un joueur.
         return (
             {
-                **json.loads(self.model_dump_json(exclude={"quiz_id", "questions", "user_id"})),
+                **json.loads(self.model_dump_json(exclude={"quiz_id", "questions", "user_id", "game_id"})),
                 "question_count": len(self.questions),
             },
         )

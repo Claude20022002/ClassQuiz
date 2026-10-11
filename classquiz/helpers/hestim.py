@@ -77,6 +77,24 @@ def signaler_partie_demarree(*, game_id, game_pin: str, quiz_id, quiz_title: str
     _taches.add(tache)
     tache.add_done_callback(_taches.discard)
 
+# ── Animation de la partie ─────────────────────────────────────────────────
+
+
+def identifiant_de_partie_valide(partie_json: str | None, game_id: str) -> bool:
+    """Vrai si `game_id` est bien l'identifiant de la partie gardée dans Redis (`partie_json`).
+
+    Le code à six chiffres est public ; l'identifiant, tiré au hasard, n'est remis qu'à
+    l'enseignant. Comparaison en temps constant ; une partie absente ou illisible refuse tout.
+    """
+    if not partie_json or not isinstance(game_id, str):
+        return False
+    try:
+        attendu = str(json.loads(partie_json).get("game_id") or "")
+    except (ValueError, AttributeError):
+        return False
+    return bool(attendu) and hmac.compare_digest(attendu.lower().encode(), game_id.strip().lower().encode())
+
+
 # ── Fin de partie ──────────────────────────────────────────────────────────
 
 _JETON = re.compile(r"^[A-Za-z0-9._-]{1,200}$")

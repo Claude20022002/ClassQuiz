@@ -371,7 +371,9 @@ class TestPlayQuiz:
     async def test_join_game_route(self, test_client: TestClient):  # noqa : F811
         res = test_client.get(f"/api/v1/quiz/join/{ValueStorage.game_pin}")
         assert res.status_code == 200
-        assert res.text == f'"{ValueStorage.game_id}"'
+        # HESTIM : la route ne rend plus l'identifiant de la partie, qui donne la main sur elle
+        assert res.json() == {"exists": True}
+        assert str(ValueStorage.game_id) not in res.text
         res = test_client.get("/api/v1/quiz/join/dsadasdasdas")
         assert res.status_code == 404
 

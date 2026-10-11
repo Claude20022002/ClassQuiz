@@ -6,11 +6,15 @@
 
 import hashlib
 import hmac
+import uuid
+from datetime import datetime
 
 import pytest
 from fastapi import HTTPException
 
-from classquiz.routers.hestim import QuestionAEcrire, questions_nettoyees, signature_attendue
+from classquiz.db.models import Quiz
+from classquiz.helpers.hestim import identifiant_de_partie_valide
+from classquiz.routers.hestim import QuestionAEcrire, partie_nouvelle, questions_nettoyees, signature_attendue
 
 SECRET = "s" * 32
 
@@ -65,6 +69,46 @@ def test_question_incoherente_refusee(champs):
 def test_plusieurs_bonnes_reponses_acceptees_en_check():
     propres = questions_nettoyees([question(type="CHECK", answers=[{"answer": "BGP", "right": True}, {"answer": "OSPF", "right": True}, {"answer": "FTP", "right": False}])])
     assert propres[0]["type"] == "CHECK"
+
+
+def test_partie_demarree_depuis_planner_sans_captcha():
+    proprietaire = uuid.uuid4()
+    quiz = Quiz(
+        id=uuid.uuid4(),
+        public=False,
+        title="Routage",
+        description="",
+        questions=questions_nettoyees([question()]),
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
+    partie = partie_nouvelle(quiz, proprietaire, "482913")
+    assert (partie.game_pin, partie.title, partie.quiz_id, partie.user_id) == ("482913", "Routage", quiz.id, proprietaire)
+    assert partie.captcha_enabled is False and partie.started is False and partie.game_mode == "kahoot"
+    assert [q.question for q in partie.questions] == ["Quel protocole route entre systèmes autonomes ?"]
+    # L'identifiant donne la main sur la partie : il est tiré au hasard à chaque partie
+    assert partie.game_id != partie_nouvelle(quiz, proprietaire, "482913").game_id
+
+
+def test_la_main_sur_une_partie_demande_son_identifiant():
+    partie = partie_nouvelle(Quiz(id=uuid.uuid4(), title="Routage", questions=questions_nettoyees([question()])), uuid.uuid4(), "482913")
+    garde = partie.model_dump_json()
+    assert identifiant_de_partie_valide(garde, str(partie.game_id))
+    assert identifiant_de_partie_valide(garde, str(partie.game_id).upper())
+    # Le code seul ne suffit pas : identifiant inventé, vide, ou partie absente de Redis
+    assert not identifiant_de_partie_valide(garde, str(uuid.uuid4()))
+    assert not identifiant_de_partie_valide(garde, "")
+    assert not identifiant_de_partie_valide(None, str(partie.game_id))
+    assert not identifiant_de_partie_valide("pas du json", str(partie.game_id))
+
+
+def test_l_identifiant_de_la_partie_ne_part_pas_chez_un_joueur():
+    partie = partie_nouvelle(Quiz(id=uuid.uuid4(), title="Routage", questions=questions_nettoyees([question()])), uuid.uuid4(), "482913")
+    (donnees,) = partie.to_player_data()
+    # Ce qu'un joueur reçoit en rejoignant : de quoi afficher la partie, rien qui donne la main
+    assert donnees["game_pin"] == "482913" and donnees["title"] == "Routage" and donnees["question_count"] == 1
+    assert "game_id" not in donnees and str(partie.game_id) not in str(donnees)
+    assert "questions" not in donnees and "user_id" not in donnees
 
 
 def test_quiz_vide_ou_trop_long_refuse():

@@ -7,7 +7,8 @@
 Planner donne un quiz en devoir : il liste les quiz d'un enseignant puis copie les questions du
 quiz choisi, et corrige lui-même les réponses des étudiants. Il crée aussi les quiz que
 l'enseignant a préparés dans Planner (générés par l'IA puis relus), sans que l'enseignant ait à
-ouvrir ClassQuiz : son compte est créé au besoin. Ces routes ne servent qu'à Planner :
+ouvrir ClassQuiz : son compte est créé au besoin. Il démarre enfin une partie en direct pour
+l'enseignant, qui l'anime depuis Planner. Ces routes ne servent qu'à Planner :
 chaque requête est signée avec le secret partagé HESTIM_WEBHOOK_SECRET (HMAC-SHA256 de
 « <horodatage>.<méthode>.<chemin et requête> », à 5 minutes près ; pour une écriture, suivi de
 « .<SHA-256 du corps> ») ; sans configuration elles répondent 404, comme si elles n'existaient pas.
@@ -16,6 +17,7 @@ chaque requête est signée avec le secret partagé HESTIM_WEBHOOK_SECRET (HMAC-
 import hashlib
 import hmac
 import html
+import secrets
 import time
 import uuid
 from datetime import datetime
@@ -26,7 +28,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ValidationError
 
 from classquiz.config import ALLOWED_TAGS_FOR_QUIZ, redis, settings
-from classquiz.db.models import ABCDQuizAnswer, Quiz, QuizQuestion, QuizQuestionType, User, UserAuthTypes
+from classquiz.db.models import ABCDQuizAnswer, GameInLobby, PlayGame, Quiz, QuizQuestion, QuizQuestionType, User, UserAuthTypes
 from classquiz.helpers.avatar import gzipped_user_avatar
 
 router = APIRouter()
@@ -35,6 +37,8 @@ _QUESTIONS_MAX = 50
 _CORPS_MAX = 512 * 1024
 # Types qu'un quiz préparé dans Planner peut contenir (ceux que ses devoirs savent noter)
 _TYPES_ECRITS = {QuizQuestionType.ABCD, QuizQuestionType.CHECK}
+# Mode d'une partie lancée depuis Planner : questions et réponses sur l'écran projeté
+_MODE_DE_JEU = "kahoot"
 
 
 def signature_attendue(secret: str, horodatage: str, methode: str, cible: str, corps: bytes | None = None) -> str:
@@ -166,6 +170,76 @@ async def creer_le_quiz(requete: Request):
     await quiz.save()
     await redis.delete("global_quiz_count")
     return {"id": str(quiz.id), "titre": quiz.title, "nb_questions": len(questions)}
+
+
+class PartieADemarrer(BaseModel):
+    """Partie en direct demandée par Planner pour un quiz de l'enseignant désigné par son adresse."""
+
+    email: str
+    quiz_id: uuid.UUID
+
+
+def partie_nouvelle(quiz: Quiz, user_id: uuid.UUID, game_pin: str) -> PlayGame:
+    """Partie prête à être rejointe, comme la crée /api/v1/quiz/start, sans captcha : les étudiants
+    arrivent par l'application de la plateforme, qui remplit déjà le code."""
+    return PlayGame(
+        quiz_id=quiz.id,
+        game_pin=game_pin,
+        questions=quiz.questions,
+        game_id=uuid.uuid4(),
+        title=quiz.title,
+        description=quiz.description or "",
+        captcha_enabled=False,
+        cover_image=quiz.cover_image,
+        game_mode=_MODE_DE_JEU,
+        user_id=user_id,
+        background_color=quiz.background_color,
+        background_image=quiz.background_image,
+    )
+
+
+@router.post("/parties", status_code=201)
+async def demarrer_la_partie(requete: Request):
+    """Démarre une partie d'un quiz de l'enseignant : { game_id, game_pin, quiz_id, titre, nb_questions, game_mode }.
+
+    `game_id` donne la main sur la partie (register_as_admin) : Planner ne le remet qu'à l'enseignant.
+    Pas de webhook « game.started » ici : Planner, qui demande la partie, l'enregistre lui-même.
+    """
+    corps = await requete.body()
+    _verifier(requete, corps)
+    if len(corps) > _CORPS_MAX:
+        raise HTTPException(status_code=413)
+    try:
+        donnees = PartieADemarrer.model_validate_json(corps)
+    except ValidationError:
+        raise HTTPException(status_code=422, detail="demande illisible")
+    email = donnees.email.strip()
+    user = await User.objects.get_or_none(email=email) or await User.objects.get_or_none(email=email.lower())
+    # Seulement ses propres quiz : un quiz public d'un autre compte ne se lance pas par cette route
+    quiz = await Quiz.objects.get_or_none(id=donnees.quiz_id, user_id=user.id) if user else None
+    if quiz is None:
+        raise HTTPException(status_code=422, detail="quiz introuvable pour cet enseignant")
+    quiz.plays += 1
+    await quiz.update()
+    game_pin = str(100000 + secrets.randbelow(900000))
+    while await redis.get(f"game:{game_pin}") is not None:
+        game_pin = str(100000 + secrets.randbelow(900000))
+    game = partie_nouvelle(quiz, user.id, game_pin)
+    await redis.set(f"game:{game_pin}", game.model_dump_json(), ex=18000)
+    await redis.set(f"game_pin:{user.id}:{quiz.id}", game_pin, ex=18000)
+    await redis.set(
+        f"game_in_lobby:{user.id.hex}",
+        GameInLobby(game_id=game.game_id, game_pin=game_pin, quiz_title=quiz.title).model_dump_json(),
+        ex=900,
+    )
+    return {
+        "game_id": str(game.game_id),
+        "game_pin": game_pin,
+        "quiz_id": str(quiz.id),
+        "titre": quiz.title,
+        "nb_questions": len(quiz.questions),
+        "game_mode": _MODE_DE_JEU,
+    }
 
 
 @router.get("/quizzes")
