@@ -346,12 +346,15 @@ async def submit_answer(sid: str, data: dict):
         q_index=int(float(data.question_index)),
     )
     player_count = await redis.scard(f"game_session:{session['game_pin']}:players")
-    await sio.emit("player_answer", {})
+    # HESTIM : sans salle, ces deux événements partaient vers toutes les parties en cours, et deux classes
+    # qui jouaient en même temps faussaient le compteur de réponses l'une de l'autre. Le compteur ne
+    # concerne que l'écran de l'enseignant ; la fin de question concerne aussi les joueurs de la partie.
+    await sio.emit("player_answer", {}, room=f"admin:{session['game_pin']}")
     if len(answers) == player_count:
         game_data = await PlayGame.get_from_redis(session["game_pin"])
         game_data.question_show = False
         await game_data.save(session["game_pin"])
-        await sio.emit("everyone_answered", {})
+        await sio.emit("everyone_answered", {}, room=session["game_pin"])
 
 
 @sio.event

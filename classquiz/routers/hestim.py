@@ -7,7 +7,7 @@
 Planner donne un quiz en devoir : il liste les quiz d'un enseignant puis copie les questions du
 quiz choisi, et corrige lui-même les réponses des étudiants. Il crée aussi les quiz que
 l'enseignant a préparés dans Planner (générés par l'IA puis relus), sans que l'enseignant ait à
-ouvrir ClassQuiz : son compte est créé au besoin. Il démarre enfin une partie en direct pour
+ouvrir ClassQuiz : son compte est créé au besoin ; il les modifie ensuite depuis Planner. Il démarre enfin une partie en direct pour
 l'enseignant, qui l'anime depuis Planner. Ces routes ne servent qu'à Planner :
 chaque requête est signée avec le secret partagé HESTIM_WEBHOOK_SECRET (HMAC-SHA256 de
 « <horodatage>.<méthode>.<chemin et requête> », à 5 minutes près ; pour une écriture, suivi de
@@ -27,8 +27,9 @@ import bleach
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ValidationError
 
-from classquiz.config import ALLOWED_TAGS_FOR_QUIZ, redis, settings
+from classquiz.config import ALLOWED_TAGS_FOR_QUIZ, meilisearch, redis, settings
 from classquiz.db.models import ABCDQuizAnswer, GameInLobby, PlayGame, Quiz, QuizQuestion, QuizQuestionType, User, UserAuthTypes
+from classquiz.helpers import get_meili_data
 from classquiz.helpers.avatar import gzipped_user_avatar
 
 router = APIRouter()
@@ -169,6 +170,54 @@ async def creer_le_quiz(requete: Request):
     )
     await quiz.save()
     await redis.delete("global_quiz_count")
+    return {"id": str(quiz.id), "titre": quiz.title, "nb_questions": len(questions)}
+
+
+class QuizAModifier(BaseModel):
+    """Nouvelle version d'un quiz de l'enseignant désigné par son adresse : tout est remplacé."""
+
+    email: str
+    titre: str
+    description: str = ""
+    questions: list[QuestionAEcrire]
+
+
+@router.post("/quiz/{quiz_id}")
+async def modifier_le_quiz(requete: Request, quiz_id: str):
+    """Remplace le titre, la description et les questions d'un quiz de l'enseignant : { id, titre, nb_questions }.
+
+    Les parties déjà lancées et les devoirs déjà donnés gardent leur copie des questions.
+    """
+    corps = await requete.body()
+    _verifier(requete, corps)
+    if len(corps) > _CORPS_MAX:
+        raise HTTPException(status_code=413)
+    try:
+        donnees = QuizAModifier.model_validate_json(corps)
+        identifiant = uuid.UUID(quiz_id)
+    except (ValidationError, ValueError):
+        raise HTTPException(status_code=422, detail="quiz illisible")
+    titre = _texte(donnees.titre)[:300]
+    if not titre:
+        raise HTTPException(status_code=422, detail="titre requis")
+    questions = questions_nettoyees(donnees.questions)
+    email = donnees.email.strip()
+    user = await User.objects.get_or_none(email=email) or await User.objects.get_or_none(email=email.lower())
+    # Seulement ses propres quiz. 422 et non 404 : Planner lit un 404 en écriture comme « route absente »
+    quiz = await Quiz.objects.get_or_none(id=identifiant, user_id=user.id) if user else None
+    if quiz is None:
+        raise HTTPException(status_code=422, detail="quiz introuvable pour cet enseignant")
+    quiz.title = titre
+    quiz.description = _texte(donnees.description)[:2000]
+    quiz.questions = questions
+    quiz.updated_at = datetime.now()
+    await quiz.update()
+    if quiz.public:
+        # Comme l'éditeur de ClassQuiz : la recherche suit le quiz public ; elle ne bloque pas l'enregistrement
+        try:
+            meilisearch.index(settings().meilisearch_index).update_documents([await get_meili_data(quiz)])
+        except Exception:
+            pass
     return {"id": str(quiz.id), "titre": quiz.title, "nb_questions": len(questions)}
 
 
