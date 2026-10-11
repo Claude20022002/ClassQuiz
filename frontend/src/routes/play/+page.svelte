@@ -96,7 +96,8 @@ SPDX-License-Identifier: MPL-2.0
 	socket.on('joined_game', (data) => {
 		gameData = data;
 		// eslint-disable-next-line no-undef
-		plausible('Joined Game', { props: { game_id: gameData.game_id } });
+		// HESTIM : le joueur ne reçoit plus l'identifiant de la partie, qui donne la main sur elle
+		plausible('Joined Game');
 		Cookies.set('joined_game', JSON.stringify({ sid: socket.id, username, game_pin }), {
 			expires: 3600
 		});
