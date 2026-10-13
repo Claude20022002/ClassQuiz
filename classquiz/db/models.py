@@ -251,6 +251,8 @@ class PlayGame(BaseModel):
     background_image: str | None = None
     custom_field: str | None = None
     question_show: bool = False
+    # HESTIM : mode équipe, noms des équipes (helpers/hestim_equipes.py) ; None : partie sans équipes
+    equipes: list[str] | None = None
 
     @classmethod
     async def get_from_redis(self, game_pin: str) -> Self:

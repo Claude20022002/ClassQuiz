@@ -22,6 +22,7 @@ from classquiz.config import redis, settings, storage, meilisearch
 from classquiz.db.models import Quiz, User, PlayGame, GameInLobby, QuizQuestion, QuizQuestionType
 from classquiz.helpers.box_controller import generate_code
 from classquiz.helpers.hestim import signaler_partie_demarree
+from classquiz.helpers.hestim_equipes import noms_des_equipes
 from classquiz.kahoot_importer.import_quiz import import_quiz
 import urllib.parse
 
@@ -83,12 +84,18 @@ async def start_quiz(
     custom_field: str | None = None,
     cqcs_enabled: bool = False,
     randomize_answers: bool = False,
+    team_count: int | None = None,
     user: User = Depends(get_current_user),
 ):
     try:
         quiz_id = uuid.UUID(quiz_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="badly formed quiz id")
+    # HESTIM : mode équipe (helpers/hestim_equipes.py)
+    try:
+        equipes = noms_des_equipes(team_count)
+    except ValueError as erreur:
+        raise HTTPException(status_code=400, detail=str(erreur))
     quiz = await Quiz.objects.get_or_none(id=quiz_id, user_id=user.id)
     if quiz is None:
         quiz = await Quiz.objects.get_or_none(id=quiz_id, public=True)
@@ -126,6 +133,7 @@ async def start_quiz(
         background_color=quiz.background_color,
         custom_field=custom_field,
         background_image=quiz.background_image,
+        equipes=equipes,
     )
     code = None
     if cqcs_enabled:
@@ -155,6 +163,8 @@ class CheckIfCaptchaEnabledResponse(BaseModel):
     enabled: bool
     game_mode: str | None = None
     custom_field: str | None = None
+    # HESTIM : mode équipe, le joueur choisit son équipe avant de rejoindre
+    equipes: list[str] | None = None
 
 
 @router.get("/play/check_captcha/{game_pin}", response_model=CheckIfCaptchaEnabledResponse)
@@ -163,10 +173,9 @@ async def check_if_captcha_enabled(game_pin: str):
     if game is None:
         return JSONResponse(status_code=404, content={"detail": "game not found"})
     game = PlayGame.model_validate_json(game)
-    if game.captcha_enabled:
-        return CheckIfCaptchaEnabledResponse(enabled=True, game_mode=game.game_mode, custom_field=game.custom_field)
-    else:
-        return CheckIfCaptchaEnabledResponse(enabled=False, game_mode=game.game_mode, custom_field=game.custom_field)
+    return CheckIfCaptchaEnabledResponse(
+        enabled=game.captcha_enabled, game_mode=game.game_mode, custom_field=game.custom_field, equipes=game.equipes
+    )
 
 
 @router.get("/join/{game_pin}", deprecated=True)

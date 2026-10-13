@@ -13,6 +13,8 @@ class JoinGameData(BaseModel):
     custom_field: str | None = None
     # HESTIM : jeton signé par la plateforme, renvoyé avec les scores (helpers/hestim.py)
     hestim: str | None = None
+    # HESTIM : mode équipe, rang de l'équipe choisie dans PlayGame.equipes
+    equipe: int | None = None
 
 
 class RejoinGameData(BaseModel):

@@ -6,7 +6,7 @@
 
 - game.started : Planner rattache la partie à la séance en cours de l'enseignant et prévient
   ses étudiants.
-- game.finished : scores, bonnes réponses, réponses libres et journal des sorties (nombre et
+- game.finished : scores, bonnes réponses, équipes (mode équipe), réponses libres et journal des sorties (nombre et
   durée des sorties de l'onglet ou de l'application pendant les questions). Chaque étudiant arrivé depuis
   la plateforme porte un jeton signé par Planner (?hid=), gardé avec son pseudo : Planner le
   vérifie et rattache le score à l'étudiant, donc au module (classement par groupe de TP).
@@ -27,6 +27,7 @@ from datetime import datetime, timezone
 import httpx
 
 from classquiz.config import redis, settings
+from classquiz.helpers.hestim_equipes import classement, equipes_des_joueurs
 
 logger = logging.getLogger(__name__)
 _taches: set[asyncio.Task] = set()
@@ -171,6 +172,8 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
     sorties = await redis.hgetall(f"game:{game_pin}:hestim:sorties")
     sorties_duree = await redis.hgetall(f"game:{game_pin}:hestim:sorties_duree")
     captures = await redis.hgetall(f"game:{game_pin}:hestim:captures")
+    equipes = getattr(game, "equipes", None)
+    equipe_de = await equipes_des_joueurs(game_pin) if equipes else {}
     bonnes: dict[str, int] = {}
     questions = []
     for i, question in enumerate(game.questions):
@@ -206,9 +209,12 @@ async def signaler_partie_terminee(game, game_pin: str) -> None:
                 "sorties": int(sorties.get(nom) or 0),
                 "sorties_duree_ms": int(sorties_duree.get(nom) or 0),
                 "captures": int(captures.get(nom) or 0),
+                # Mode équipe : nom de l'équipe choisie (None : partie sans équipes)
+                "equipe": equipes[equipe_de[nom]] if nom in equipe_de and 0 <= equipe_de[nom] < len(equipes) else None,
             }
             for nom in noms
         ],
+        "equipes": classement(equipes, equipe_de, scores) if equipes else None,
         "questions": questions,
         "finished_at": datetime.now(timezone.utc).isoformat(),
     }

@@ -31,6 +31,7 @@ from classquiz.config import ALLOWED_TAGS_FOR_QUIZ, meilisearch, redis, settings
 from classquiz.db.models import ABCDQuizAnswer, GameInLobby, PlayGame, Quiz, QuizQuestion, QuizQuestionType, User, UserAuthTypes
 from classquiz.helpers import get_meili_data
 from classquiz.helpers.avatar import gzipped_user_avatar
+from classquiz.helpers.hestim_equipes import noms_des_equipes
 
 router = APIRouter()
 _TOLERANCE_S = 300
@@ -226,9 +227,11 @@ class PartieADemarrer(BaseModel):
 
     email: str
     quiz_id: uuid.UUID
+    # Mode équipe : 2 à 8 équipes, choisies par les joueurs en rejoignant ; absent, partie sans équipes
+    nb_equipes: int | None = None
 
 
-def partie_nouvelle(quiz: Quiz, user_id: uuid.UUID, game_pin: str) -> PlayGame:
+def partie_nouvelle(quiz: Quiz, user_id: uuid.UUID, game_pin: str, equipes: list[str] | None = None) -> PlayGame:
     """Partie prête à être rejointe, comme la crée /api/v1/quiz/start, sans captcha : les étudiants
     arrivent par l'application de la plateforme, qui remplit déjà le code."""
     return PlayGame(
@@ -244,12 +247,13 @@ def partie_nouvelle(quiz: Quiz, user_id: uuid.UUID, game_pin: str) -> PlayGame:
         user_id=user_id,
         background_color=quiz.background_color,
         background_image=quiz.background_image,
+        equipes=equipes,
     )
 
 
 @router.post("/parties", status_code=201)
 async def demarrer_la_partie(requete: Request):
-    """Démarre une partie d'un quiz de l'enseignant : { game_id, game_pin, quiz_id, titre, nb_questions, game_mode }.
+    """Démarre une partie d'un quiz de l'enseignant : { game_id, game_pin, quiz_id, titre, nb_questions, game_mode, equipes }.
 
     `game_id` donne la main sur la partie (register_as_admin) : Planner ne le remet qu'à l'enseignant.
     Pas de webhook « game.started » ici : Planner, qui demande la partie, l'enregistre lui-même.
@@ -262,6 +266,10 @@ async def demarrer_la_partie(requete: Request):
         donnees = PartieADemarrer.model_validate_json(corps)
     except ValidationError:
         raise HTTPException(status_code=422, detail="demande illisible")
+    try:
+        equipes = noms_des_equipes(donnees.nb_equipes)
+    except ValueError as erreur:
+        raise HTTPException(status_code=422, detail=str(erreur))
     email = donnees.email.strip()
     user = await User.objects.get_or_none(email=email) or await User.objects.get_or_none(email=email.lower())
     # Seulement ses propres quiz : un quiz public d'un autre compte ne se lance pas par cette route
@@ -273,7 +281,7 @@ async def demarrer_la_partie(requete: Request):
     game_pin = str(100000 + secrets.randbelow(900000))
     while await redis.get(f"game:{game_pin}") is not None:
         game_pin = str(100000 + secrets.randbelow(900000))
-    game = partie_nouvelle(quiz, user.id, game_pin)
+    game = partie_nouvelle(quiz, user.id, game_pin, equipes)
     await redis.set(f"game:{game_pin}", game.model_dump_json(), ex=18000)
     await redis.set(f"game_pin:{user.id}:{quiz.id}", game_pin, ex=18000)
     await redis.set(
@@ -288,6 +296,7 @@ async def demarrer_la_partie(requete: Request):
         "titre": quiz.title,
         "nb_questions": len(quiz.questions),
         "game_mode": _MODE_DE_JEU,
+        "equipes": equipes,
     }
 
 

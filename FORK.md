@@ -27,7 +27,8 @@ Ils n'existent pas dans l'origine : une reprise de l'amont ne les touche pas.
 |---|---|
 | `classquiz/routers/hestim.py` | Routes signées par Planner : quiz lus et écrits, partie lancée depuis une séance |
 | `classquiz/helpers/hestim.py` | Webhooks vers Planner (partie démarrée, scores), contrôle de l'identifiant de partie |
-| `classquiz/tests/test_hestim.py`, `classquiz/tests/test_salles.py` | Tests de ce qui précède et des salles du serveur de jeu |
+| `classquiz/helpers/hestim_equipes.py` | Mode équipe : 2 à 8 équipes choisies par les joueurs, score d'équipe = moyenne de ses membres |
+| `classquiz/tests/test_hestim.py`, `classquiz/tests/test_salles.py`, `classquiz/tests/test_equipes.py` | Tests de ce qui précède, des salles du serveur de jeu et du mode équipe |
 | `frontend/src/lib/hestim/` | Marque et thème HESTIM |
 | `frontend/src/lib/play/hestim_anti_triche.ts` | Journal des sorties du joueur pendant une question |
 | `frontend/src/lib/play/admin/nuage_mots.svelte` | Nuage de mots des réponses libres |
@@ -40,9 +41,9 @@ Dans le code Python, chaque modification porte un commentaire qui commence par �
 | Où | Quoi |
 |---|---|
 | `classquiz/__init__.py`, `config.py` | Branchement des routes HESTIM ; adresse et secret des webhooks |
-| `classquiz/db/models.py` | L'identifiant de partie (`game_id`) ne part plus chez un joueur |
-| `classquiz/routers/quiz.py` | Webhook « partie démarrée » ; la route publique ne rend plus l'identifiant d'une partie |
-| `classquiz/socket_server/` | Prise de main réservée à qui a l'identifiant ; réponses mélangées par joueur ; journal des sorties ; compteur de réponses et fin de question limités à leur partie |
+| `classquiz/db/models.py` | L'identifiant de partie (`game_id`) ne part plus chez un joueur ; noms des équipes de la partie (`equipes`) |
+| `classquiz/routers/quiz.py` | Webhook « partie démarrée » ; la route publique ne rend plus l'identifiant d'une partie ; nombre d'équipes au lancement (`team_count`) et équipes rendues au joueur qui rejoint |
+| `classquiz/socket_server/` | Prise de main réservée à qui a l'identifiant ; réponses mélangées par joueur ; journal des sorties ; compteur de réponses et fin de question limités à leur partie ; choix de l'équipe en rejoignant et classement des équipes en fin de partie |
 | `classquiz/tests/test_server.py` | Adapté à la route qui ne rend plus l'identifiant |
 | `frontend/src/lib/play/`, `frontend/src/routes/play/` | Rejoindre une partie depuis Planner (pseudo et jeton dans le lien), anti-triche, nuage de mots |
 | Le reste de `frontend/src/` (environ 60 fichiers) | Style HESTIM (couleurs, polices, textes) et nom affiché « PlannerQuiz » |

@@ -37,6 +37,12 @@ from classquiz.helpers.hestim import (
     identifiant_de_partie_valide,
     signaler_partie_terminee,
 )
+from classquiz.helpers.hestim_equipes import (
+    classement_de_la_partie,
+    enregistrer_equipe,
+    equipe_valide,
+    retirer_de_son_equipe,
+)
 from .models import (
     RejoinGameData,
     JoinGameData,
@@ -162,6 +168,10 @@ async def join_game(sid: str, data: dict):
     if await redis.get(f"game_session:{data.game_pin}:players:{data.username}") is not None:
         await sio.emit("username_already_exists", room=sid)
         return
+    # HESTIM : mode équipe, pas d'entrée dans la partie sans une équipe de la liste
+    if game_data.equipes and not equipe_valide(game_data.equipes, data.equipe):
+        await sio.emit("equipe_requise", room=sid)
+        return
 
     session = {
         "game_pin": data.game_pin,
@@ -180,6 +190,8 @@ async def join_game(sid: str, data: dict):
 
     # HESTIM : identité du joueur sur la plateforme, pour lui rattacher son score
     await enregistrer_joueur(data.game_pin, data.username, data.hestim)
+    if game_data.equipes:
+        await enregistrer_equipe(data.game_pin, data.username, data.equipe)
 
     if data.custom_field == "":
         data.custom_field = None
@@ -192,7 +204,8 @@ async def join_game(sid: str, data: dict):
 
     await sio.emit(
         "player_joined",
-        {"username": data.username, "sid": sid},
+        # HESTIM : `equipe`, rang de l'équipe du joueur (None : partie sans équipes)
+        {"username": data.username, "sid": sid, "equipe": data.equipe if game_data.equipes else None},
         room=f"admin:{data.game_pin}",
     )
     # +++ Time-Sync +++
@@ -392,6 +405,13 @@ async def get_final_results(sid: str, _data: dict):
         return
     game_data = await PlayGame.get_from_redis(session["game_pin"])
     results = await generate_final_results(game_data, session["game_pin"])
+    # HESTIM : mode équipe, le classement des équipes arrive avant les résultats finaux qui l'affichent
+    if game_data.equipes:
+        await sio.emit(
+            "classement_equipes",
+            await classement_de_la_partie(game_data.equipes, session["game_pin"]),
+            room=session["game_pin"],
+        )
     await sio.emit("final_results", results, room=session["game_pin"])
     # HESTIM : scores envoyés à la plateforme (une seule fois par partie)
     await signaler_partie_terminee(game_data, session["game_pin"])
@@ -451,6 +471,7 @@ async def kick_player(sid: str, data: dict):
         f"game_session:{session['game_pin']}:players",
         GamePlayer(username=data.username, sid=player_sid).model_dump_json(),
     )
+    await retirer_de_son_equipe(session["game_pin"], data.username)  # HESTIM : mode équipe
     await sio.leave_room(player_sid, session["game_pin"])
     await sio.emit("kick", room=player_sid)
 
