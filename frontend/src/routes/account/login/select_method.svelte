@@ -17,7 +17,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <div class="px-6 py-4">
-	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">PlannerQuiz</h2>
+	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">Quiz</h2>
 
 	<div class="w-full mt-4">
 		<div class="dark:bg-gray-800 bg-white p-4 rounded-lg">

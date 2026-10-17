@@ -141,7 +141,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>PlannerQuiz - Settings</title>
+	<title>Quiz · Paramètres</title>
 </svelte:head>
 
 {#await getUser()}

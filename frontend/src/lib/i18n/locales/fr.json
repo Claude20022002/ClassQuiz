@@ -14,8 +14,8 @@
             "retour": "Retour à l'accueil"
         },
         "accueil": {
-            "description": "Les quiz du cours de HESTIM : en direct en classe, en équipes ou en devoir.",
-            "phrase": "Les quiz du cours, en direct pendant la séance ou en devoir. Avec votre compte HESTIM.",
+            "description": "Les quiz du cours de HESTIM : en direct en classe ou en équipes.",
+            "phrase": "Les quiz du cours, en direct pendant la séance. Avec votre compte HESTIM.",
             "rejoindre": "Rejoindre une partie",
             "connexion": "Se connecter avec HESTIM",
             "direct": "Quiz en direct",
@@ -162,15 +162,15 @@
     "index_page": {
         "slogan": "La plateforme de quiz open-source !",
         "meta": {
-            "description": "PlannerQuiz est une application d'apprentissage interactif destiné aux étudiants, elle est open-source et gratuite",
+            "description": "Le service de quiz de HESTIM : des quiz interactifs pour les étudiants, sur un logiciel libre.",
             "title": "Accueil"
         },
         "features_description": {
-            "1": "PlannerQuiz est un outil de quiz vous permettant de créer et gérer des quiz.",
+            "1": "Le service de quiz vous permet de créer et de gérer des quiz.",
             "2": "La fonctionnalité principale est la fonction d'import de quiz Kahoot!, vous permettant de créer des quiz directement depuis Kahoot!.",
             "3": "L'éditeur et la fonction d'export des résultats de quiz en format Excel sont des fonctionnalités remarquables de l'application."
         },
-        "stats": "Il y a déjà {{user_count}} utilisateurs et {{quiz_count}} quiz sur PlannerQuiz.",
+        "stats": "Déjà {{user_count}} utilisateurs et {{quiz_count}} quiz.",
         "see_what_true_and_false": "Voir ce qui était vrai ou faux",
         "see_how_many_true_and_false": "Voir combien avaient vrai ou faux",
         "create_or_import": "Créer ou Importer",
@@ -194,24 +194,24 @@
         "check_if_chosen_wisely": "Vérifier si vous avez bien choisi.",
         "list_winners": "Liste des gagnants",
         "get_ranking_and_winners": "Avoir le classement et voir les gagnants",
-        "why_classquiz": "Pourquoi PlannerQuiz ?",
-        "no_tracking_content": "Kahoot! vous suit et envoie ces informations à des tiers, mais pas PlannerQuiz.",
-        "self_hostable_content": "PlannerQuiz est facilement auto-hébergeable, vos données sont sous contrôle !",
-        "user_friendly_content": "PlannerQuiz se veut simple d'utilisation, de manière à être utilisable par le plus grand nombre.",
-        "import_quiz_from_kahoot_and_edit": "Importer un quiz depuis Kahoot! et l'éditer sur PlannerQuiz",
+        "why_classquiz": "Pourquoi ce service de quiz ?",
+        "no_tracking_content": "Kahoot! vous suit et envoie ces informations à des tiers ; le service de quiz de HESTIM, non.",
+        "self_hostable_content": "Le service de quiz est hébergé pour l’école : vos données restent sous son contrôle.",
+        "user_friendly_content": "Le service de quiz se veut simple, pour être utilisable par tous.",
+        "import_quiz_from_kahoot_and_edit": "Importer un quiz depuis Kahoot! et le modifier ici",
         "quiz_results_downloadable_content": "Les résultats des quiz sont aisément exportables en format Excel (apparemment les autres outils ne le peuvent pas)",
-        "multilingual_content": "PlannerQuiz est entièrement traduit en anglais, français, allemand, italien, norvégien bokmål, turc, et partiellement en indonésien et catalan.",
+        "multilingual_content": "Le service de quiz est traduit en français, en anglais et dans d’autres langues.",
         "dark_mode_content": "L'une des fonctionnalités les plus importantes qu'un site peut avoir !",
-        "german_server_content": "Les serveurs de PlannerQuiz sont situés en Allemagne et hébergés par Netcup.",
+        "german_server_content": "Les serveurs du service de quiz sont hébergés en Europe.",
         "choose_answer_wisely": "Choisissez votre réponse judicieusement",
-        "completely_free_content": "PlannerQuiz est gratuit pour l'utilisateur, sans plan payant ou de redirection pour une version payante. Tout don est donc apprécié.",
+        "completely_free_content": "Rien à payer pour les étudiants ni les enseignants, et aucune publicité.",
         "download_quizzes": "Télécharger des quiz",
         "community_driven": "Piloté par la communauté",
-        "download_quizzes_content": "Les quiz peuvent être téléchargés en un seul fichier et importés à tout moment, ce qui vous permet de déplacer facilement vos quiz vers une autre instance de PlannerQuiz.",
-        "community_driven_content": "PlannerQuiz dépend de sa communauté pour le financement, les idées de tests, les demandes de fonctionnalités, les traductions et plus encore ! Vous pouvez aussi faire partie de la communauté PlannerQuiz !",
-        "how_does_classquiz_work": "Comment fonctionne PlannerQuiz ?",
+        "download_quizzes_content": "Les quiz se téléchargent en un seul fichier et se réimportent à tout moment, y compris dans un autre service compatible.",
+        "community_driven_content": "Le service de quiz repose sur un logiciel libre, développé par sa communauté.",
+        "how_does_classquiz_work": "Comment fonctionne le service de quiz ?",
         "no_player_limit": "Nombre de joueurs illimité",
-        "no_player_limit_content": "PlannerQuiz n'a pas de limite artificielle de nombre de joueurs. En théorie, plus de 1000 joueurs peuvent participer au même quiz, mais les tests n'ont été réalisés que jusqu'à 300 participants."
+        "no_player_limit_content": "Pas de limite artificielle de joueurs : en théorie, plus de 1000 joueurs peuvent participer au même quiz ; les essais ont été faits jusqu’à 300."
     },
     "overview_page": {
         "created_at": "Créé le",
@@ -275,7 +275,7 @@
         "classquiz_quiz": "Un quiz HESTIM",
         "upload_file_ending": "Téléverser le fichier se terminant par .cqa ou .xlsx",
         "url_should_look_like_this": "L'URL devrait ressembler à ceci : https://create.kahoot.it/details/...",
-        "this_side_classquiz": "De ce côté, vous pouvez importer des quiz, qui ont été exportés de PlannerQuiz.",
+        "this_side_classquiz": "De ce côté, vous pouvez importer des quiz exportés depuis ce service.",
         "this_side_classquiz_excel": "Vous pouvez aussi téléverser des fichiers Excel, si vous avez rempli le modèle suivant. Si un quiz avec le titre existe déjà, cela rajoutera les questions au quiz existant.",
         "download_template_here": "Télécharger le modèle"
     },
@@ -520,8 +520,8 @@
     },
     "downloader": {
         "excel_format": "Format Excel",
-        "own_format": "Format PlannerQuiz",
-        "help": "Le format PlannerQuiz (.cqa) intégre aussi les images et les types de questions, alors que le format Excel ne supporte que les votes et les questions à choix multiples.",
+        "own_format": "Format Quiz",
+        "help": "Le format Quiz (.cqa) intègre aussi les images et les types de questions, alors que le format Excel ne supporte que les votes et les questions à choix multiples.",
         "select_download_type": "Sélectionner le type de téléchargement"
     }
 }

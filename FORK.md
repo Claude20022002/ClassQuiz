@@ -46,7 +46,7 @@ Dans le code Python, chaque modification porte un commentaire qui commence par �
 | `classquiz/socket_server/` | Prise de main réservée à qui a l'identifiant ; réponses mélangées par joueur ; journal des sorties ; compteur de réponses et fin de question limités à leur partie ; choix de l'équipe en rejoignant et classement des équipes en fin de partie |
 | `classquiz/tests/test_server.py` | Adapté à la route qui ne rend plus l'identifiant |
 | `frontend/src/lib/play/`, `frontend/src/routes/play/` | Rejoindre une partie depuis Planner (pseudo et jeton dans le lien), anti-triche, nuage de mots |
-| Le reste de `frontend/src/` (environ 60 fichiers) | Style HESTIM (couleurs, polices, textes) et nom affiché « PlannerQuiz » |
+| Le reste de `frontend/src/` (environ 60 fichiers) | Style HESTIM (couleurs, polices, textes) et nom affiché « Quiz » (« PlannerQuiz » jusqu'au 17 octobre 2026) |
 | `frontend/static/` | Icônes et manifeste |
 | `frontend/Dockerfile`, `README.md` | Image du site ; titre du README |
 
