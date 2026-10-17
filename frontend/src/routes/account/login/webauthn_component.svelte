@@ -78,7 +78,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <div class="px-6 py-4">
-	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">PlannerQuiz</h2>
+	<h2 class="text-3xl font-bold text-center text-gray-700 dark:text-white">Quiz</h2>
 	<p class="mt-1 text-center text-gray-500 dark:text-gray-400">
 		Start the Security-Key verification
 	</p>

@@ -81,7 +81,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>PlannerQuiz - Login</title>
+	<title>Quiz · Connexion</title>
 </svelte:head>
 <div class="flex items-center justify-center h-screen">
 	{#if verified}

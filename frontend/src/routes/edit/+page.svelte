@@ -62,7 +62,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>PlannerQuiz - Edit</title>
+	<title>Quiz · Modifier</title>
 </svelte:head>
 {#await get_quiz()}
 	<svg class="h-8 w-8 animate-spin mx-auto my-20" viewBox="3 3 18 18">

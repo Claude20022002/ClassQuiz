@@ -162,7 +162,7 @@ SPDX-License-Identifier: MPL-2.0
 
 <svelte:window onbeforeunload={confirmUnload} />
 <svelte:head>
-	<title>PlannerQuiz - Play</title>
+	<title>Quiz · Jouer</title>
 </svelte:head>
 <div
 	class="min-h-screen min-w-full"
