@@ -77,7 +77,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>PlannerQuiz - View {quiz.title}</title>
+	<title>Quiz · {quiz.title}</title>
 </svelte:head>
 
 <div>

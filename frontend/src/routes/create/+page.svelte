@@ -54,7 +54,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>PlannerQuiz - Create</title>
+	<title>Quiz · Créer</title>
 </svelte:head>
 
 {#if data !== undefined}

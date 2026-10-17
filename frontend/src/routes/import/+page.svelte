@@ -101,7 +101,7 @@ SPDX-License-Identifier: MPL-2.0
 </script>
 
 <svelte:head>
-	<title>PlannerQuiz - Import</title>
+	<title>Quiz · Importer</title>
 </svelte:head>
 
 <div class="flex items-center justify-center h-full px-4">
